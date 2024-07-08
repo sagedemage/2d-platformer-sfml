@@ -158,7 +158,7 @@ bool playerPlatformCollision(sf::RectangleShape& player, sf::RectangleShape& wal
     if (player.getPosition().x > wall.getPosition().x &&
         player.getPosition().x < wall.getPosition().x + 25) {
         if (player.getPosition().y+25 >= wall.getPosition().y &&
-            player.getPosition().y+25 < wall.getPosition().y+4) {
+            player.getPosition().y+25 < wall.getPosition().y+accel) {
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
@@ -169,7 +169,7 @@ bool playerPlatformCollision(sf::RectangleShape& player, sf::RectangleShape& wal
     else if (player.getPosition().x + 25 > wall.getPosition().x &&
         player.getPosition().x + 25 < wall.getPosition().x + 25) {
         if (player.getPosition().y+25 >= wall.getPosition().y &&
-            player.getPosition().y+25 < wall.getPosition().y+4) {
+            player.getPosition().y+25 < wall.getPosition().y+accel) {
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
@@ -180,7 +180,7 @@ bool playerPlatformCollision(sf::RectangleShape& player, sf::RectangleShape& wal
     else if (player.getPosition().x + 25/2 > wall.getPosition().x &&
         player.getPosition().x + 25/2 < wall.getPosition().x + 25) {
         if (player.getPosition().y+25 >= wall.getPosition().y &&
-            player.getPosition().y+25 < wall.getPosition().y+4) {
+            player.getPosition().y+25 < wall.getPosition().y+accel) {
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
@@ -362,6 +362,11 @@ bool drawAllRegions(sf::RenderWindow& window, sf::RectangleShape& player, sf::Re
 
     on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
 
+    wall.setPosition(LEVEL_WIDTH-550, LEVEL_HEIGHT-100);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
     window.display();
 
     return on_the_floor;
@@ -388,7 +393,7 @@ int main()
     platform.setFillColor(sf::Color(0, 0, 0, 255));
 
     const float speed = 2.f;
-    const int accel = 4;
+    const int accel = 5;
     bool on_the_floor = false;
 
     sf::Music music;
