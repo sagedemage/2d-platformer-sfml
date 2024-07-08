@@ -1,0 +1,7 @@
+build/
+.vscode/
+*.aup3
+*.mscz
+*.kdev4
+.mscbackup/
+
