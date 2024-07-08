@@ -158,7 +158,7 @@ bool playerPlatformCollision(sf::RectangleShape& player, sf::RectangleShape& wal
     if (player.getPosition().x > wall.getPosition().x &&
         player.getPosition().x < wall.getPosition().x + 25) {
         if (player.getPosition().y+25 >= wall.getPosition().y &&
-            player.getPosition().y+25 < wall.getPosition().y+4) {
+            player.getPosition().y+25 < wall.getPosition().y+accel) {
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
@@ -169,7 +169,7 @@ bool playerPlatformCollision(sf::RectangleShape& player, sf::RectangleShape& wal
     else if (player.getPosition().x + 25 > wall.getPosition().x &&
         player.getPosition().x + 25 < wall.getPosition().x + 25) {
         if (player.getPosition().y+25 >= wall.getPosition().y &&
-            player.getPosition().y+25 < wall.getPosition().y+4) {
+            player.getPosition().y+25 < wall.getPosition().y+accel) {
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
@@ -180,7 +180,7 @@ bool playerPlatformCollision(sf::RectangleShape& player, sf::RectangleShape& wal
     else if (player.getPosition().x + 25/2 > wall.getPosition().x &&
         player.getPosition().x + 25/2 < wall.getPosition().x + 25) {
         if (player.getPosition().y+25 >= wall.getPosition().y &&
-            player.getPosition().y+25 < wall.getPosition().y+4) {
+            player.getPosition().y+25 < wall.getPosition().y+accel) {
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
@@ -362,6 +362,131 @@ bool drawAllRegions(sf::RenderWindow& window, sf::RectangleShape& player, sf::Re
 
     on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
 
+    wall.setPosition(LEVEL_WIDTH-550, LEVEL_HEIGHT-100);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-525, LEVEL_HEIGHT-100);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-500, LEVEL_HEIGHT-100);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-475, LEVEL_HEIGHT-100);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-450, LEVEL_HEIGHT-100);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-425, LEVEL_HEIGHT-125);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-400, LEVEL_HEIGHT-125);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-375, LEVEL_HEIGHT-125);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-350, LEVEL_HEIGHT-125);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-325, LEVEL_HEIGHT-150);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-300, LEVEL_HEIGHT-175);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-275, LEVEL_HEIGHT-200);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-250, LEVEL_HEIGHT-200);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-225, LEVEL_HEIGHT-200);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    wall.setPosition(LEVEL_WIDTH-200, LEVEL_HEIGHT-200);
+    window.draw(wall);
+
+    on_the_floor = playerWallCollision(player, wall, on_the_floor, accel);
+
+    platform.setPosition(LEVEL_WIDTH-150, LEVEL_HEIGHT-175);
+    window.draw(platform);
+
+    on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
+
+    platform.setPosition(LEVEL_WIDTH-125, LEVEL_HEIGHT-175);
+    window.draw(platform);
+
+    on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
+
+    platform.setPosition(LEVEL_WIDTH-150, LEVEL_HEIGHT-150);
+    window.draw(platform);
+
+    on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
+
+    platform.setPosition(LEVEL_WIDTH-125, LEVEL_HEIGHT-150);
+    window.draw(platform);
+
+    on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
+
+    platform.setPosition(LEVEL_WIDTH-150, LEVEL_HEIGHT-125);
+    window.draw(platform);
+
+    on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
+
+    platform.setPosition(LEVEL_WIDTH-125, LEVEL_HEIGHT-125);
+    window.draw(platform);
+
+    on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
+
+    platform.setPosition(LEVEL_WIDTH-150, LEVEL_HEIGHT-100);
+    window.draw(platform);
+
+    on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
+
+    platform.setPosition(LEVEL_WIDTH-125, LEVEL_HEIGHT-100);
+    window.draw(platform);
+
+    on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
+
+    platform.setPosition(LEVEL_WIDTH-150, LEVEL_HEIGHT-75);
+    window.draw(platform);
+
+    on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
+
+    platform.setPosition(LEVEL_WIDTH-125, LEVEL_HEIGHT-75);
+    window.draw(platform);
+
+    on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
+
     window.display();
 
     return on_the_floor;
@@ -388,7 +513,7 @@ int main()
     platform.setFillColor(sf::Color(0, 0, 0, 255));
 
     const float speed = 2.f;
-    const int accel = 4;
+    const int accel = 5;
     bool on_the_floor = false;
 
     sf::Music music;
@@ -424,7 +549,7 @@ int main()
                 if (event.key.code == sf::Keyboard::Up and on_the_floor == true)
                 {
                     // jump
-                    player.move(0.f, -accel*10);
+                    player.move(0.f, -accel*8);
                     on_the_floor = false;
                 }
                 if (event.key.code == sf::Keyboard::Down and on_the_floor == true)
