@@ -27,7 +27,7 @@ sf::Vector2f player_boundary(sf::Vector2f position) {
     return position;
 }
 
-bool movePlayer(sf::RectangleShape& player, int speed, int accel, bool on_the_floor) {
+bool movePlayer(sf::RectangleShape& player, int speed, bool on_the_floor) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
         // move player left
@@ -40,19 +40,6 @@ bool movePlayer(sf::RectangleShape& player, int speed, int accel, bool on_the_fl
         player.move(speed, 0.f);
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) and on_the_floor == true)
-    {
-        // jump
-        player.move(0.f, -accel*10);
-        on_the_floor = false;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) and on_the_floor == true)
-    {
-        // drop down
-        player.move(0.f, accel);
-        on_the_floor = false;
-    }
     return on_the_floor;
 }
 
@@ -433,9 +420,23 @@ int main()
                     window.close();
                 }
             }
+            if (event.type == sf::Event::KeyReleased) {
+                if (event.key.code == sf::Keyboard::Up and on_the_floor == true)
+                {
+                    // jump
+                    player.move(0.f, -accel*10);
+                    on_the_floor = false;
+                }
+                if (event.key.code == sf::Keyboard::Down and on_the_floor == true)
+                {
+                    // drop down
+                    player.move(0.f, accel);
+                    on_the_floor = false;
+                }
+            }
         }
 
-        on_the_floor = movePlayer(player, speed, accel, on_the_floor);
+        on_the_floor = movePlayer(player, speed, on_the_floor);
 
         // Player Boundary
         sf::Vector2f player_position = player_boundary(player.getPosition());
