@@ -27,7 +27,7 @@ sf::Vector2f player_boundary(sf::Vector2f position) {
     return position;
 }
 
-bool movePlayer(sf::RectangleShape& player, int speed, bool on_the_floor) {
+void movePlayer(sf::Sprite& player, int speed) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
         // move player left
@@ -39,11 +39,9 @@ bool movePlayer(sf::RectangleShape& player, int speed, bool on_the_floor) {
         // move player right
         player.move(speed, 0.f);
     }
-
-    return on_the_floor;
 }
 
-bool playerWallCollision(sf::RectangleShape& player, sf::RectangleShape& wall, bool on_the_floor, int accel) {
+bool playerWallCollision(sf::Sprite& player, sf::Sprite& wall, bool on_the_floor, int accel) {
 
     sf::Vector2f p_position = player.getPosition();
     int offset = 2;
@@ -100,7 +98,7 @@ bool playerWallCollision(sf::RectangleShape& player, sf::RectangleShape& wall, b
     if (player.getPosition().x > wall.getPosition().x &&
         player.getPosition().x < wall.getPosition().x + 25) {
         if (player.getPosition().y+25 >= wall.getPosition().y &&
-            player.getPosition().y+25 < wall.getPosition().y +25) {
+            player.getPosition().y+25 < wall.getPosition().y+25) {
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
@@ -109,7 +107,7 @@ bool playerWallCollision(sf::RectangleShape& player, sf::RectangleShape& wall, b
         else if (player.getPosition().y <= wall.getPosition().y+25 &&
             player.getPosition().y > wall.getPosition().y) {
             // bottom collision
-            p_position.y+=2;
+            p_position.y+=accel;
             player.setPosition(p_position);
         }
     }
@@ -126,7 +124,7 @@ bool playerWallCollision(sf::RectangleShape& player, sf::RectangleShape& wall, b
         else if (player.getPosition().y <= wall.getPosition().y+25 &&
             player.getPosition().y > wall.getPosition().y) {
             // bottom collision
-            p_position.y+=2;
+            p_position.y+=accel;
             player.setPosition(p_position);
         }
     }
@@ -143,22 +141,22 @@ bool playerWallCollision(sf::RectangleShape& player, sf::RectangleShape& wall, b
         else if (player.getPosition().y <= wall.getPosition().y+25 &&
             player.getPosition().y > wall.getPosition().y) {
             // bottom collision
-            p_position.y+=2;
+            p_position.y+=accel;
             player.setPosition(p_position);
         }
     }
     return on_the_floor;
 }
 
-bool playerPlatformCollision(sf::RectangleShape& player, sf::RectangleShape& wall, bool on_the_floor, int accel) {
+bool playerPlatformCollision(sf::Sprite& player, sf::Sprite& platform, bool on_the_floor, int accel) {
 
     sf::Vector2f p_position = player.getPosition();
 
     /* Y Axis Collision */
-    if (player.getPosition().x > wall.getPosition().x &&
-        player.getPosition().x < wall.getPosition().x + 25) {
-        if (player.getPosition().y+25 >= wall.getPosition().y &&
-            player.getPosition().y+25 < wall.getPosition().y+accel) {
+    if (player.getPosition().x > platform.getPosition().x &&
+        player.getPosition().x < platform.getPosition().x + 25) {
+        if (player.getPosition().y+25 >= platform.getPosition().y &&
+            player.getPosition().y+25 < platform.getPosition().y+accel) {
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
@@ -166,10 +164,10 @@ bool playerPlatformCollision(sf::RectangleShape& player, sf::RectangleShape& wal
         }
     }
 
-    else if (player.getPosition().x + 25 > wall.getPosition().x &&
-        player.getPosition().x + 25 < wall.getPosition().x + 25) {
-        if (player.getPosition().y+25 >= wall.getPosition().y &&
-            player.getPosition().y+25 < wall.getPosition().y+accel) {
+    else if (player.getPosition().x + 25 > platform.getPosition().x &&
+        player.getPosition().x + 25 < platform.getPosition().x + 25) {
+        if (player.getPosition().y+25 >= platform.getPosition().y &&
+            player.getPosition().y+25 < platform.getPosition().y+accel) {
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
@@ -177,10 +175,10 @@ bool playerPlatformCollision(sf::RectangleShape& player, sf::RectangleShape& wal
         }
     }
 
-    else if (player.getPosition().x + 25/2 > wall.getPosition().x &&
-        player.getPosition().x + 25/2 < wall.getPosition().x + 25) {
-        if (player.getPosition().y+25 >= wall.getPosition().y &&
-            player.getPosition().y+25 < wall.getPosition().y+accel) {
+    else if (player.getPosition().x + 25/2 > platform.getPosition().x &&
+        player.getPosition().x + 25/2 < platform.getPosition().x + 25) {
+        if (player.getPosition().y+25 >= platform.getPosition().y &&
+            player.getPosition().y+25 < platform.getPosition().y+accel) {
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
@@ -196,11 +194,9 @@ int gravity(sf::Vector2f position, int accel) {
     return position.y;
 }
 
-bool drawAllRegions(sf::RenderWindow& window, sf::RectangleShape& player, sf::RectangleShape& wall,
-    sf::RectangleShape& platform, bool on_the_floor, int accel) {
+bool drawAllRegions(sf::RenderWindow& window, sf::Sprite& player, sf::Sprite& wall,
+    sf::Sprite& platform, bool on_the_floor, int accel) {
     window.clear(sf::Color(84, 193, 255, 255));
-
-    window.draw(player);
 
     wall.setPosition(LEVEL_WIDTH-25, LEVEL_HEIGHT-25);
     window.draw(wall);
@@ -487,6 +483,8 @@ bool drawAllRegions(sf::RenderWindow& window, sf::RectangleShape& player, sf::Re
 
     on_the_floor = playerPlatformCollision(player, platform, on_the_floor, accel);
 
+    window.draw(player);
+
     window.display();
 
     return on_the_floor;
@@ -498,19 +496,34 @@ int main()
     sf::RenderWindow window(sf::VideoMode(LEVEL_WIDTH, LEVEL_HEIGHT), "2D Platformer");
     window.setFramerateLimit(60);
 
-    sf::Clock gameClock;
-
     // player
-    sf::RectangleShape player(sf::Vector2f(25, 25));
-    player.setFillColor(sf::Color(91, 31, 255, 255));
+    sf::Texture player_texture;
+    if(!player_texture.loadFromFile("./assets/player/player.png")) {
+        std::cout << "Unable to load image file" << std::endl;
+    }
+    sf::Sprite player;
+    player.setTexture(player_texture);
+    player.scale(sf::Vector2f(25/player.getLocalBounds().width, 25/player.getLocalBounds().height));
 
     player.setPosition(0, LEVEL_HEIGHT-250);
 
-    sf::RectangleShape wall(sf::Vector2f(25, 25));
-    wall.setFillColor(sf::Color(0, 0, 0, 255));
+    sf::Texture wall_texture;
+    if(!wall_texture.loadFromFile("./assets/tiles/tile1.png")) {
+        std::cout << "Unable to load image file" << std::endl;
+    }
 
-    sf::RectangleShape platform(sf::Vector2f(25, 25/2));
-    platform.setFillColor(sf::Color(0, 0, 0, 255));
+    sf::Sprite wall;
+    wall.setTexture(wall_texture);
+    wall.scale(sf::Vector2f(25/wall.getLocalBounds().width, 25/wall.getLocalBounds().height));
+
+    sf::Texture platform_texture;
+    if(!platform_texture.loadFromFile("./assets/tiles/tile2.png")) {
+        std::cout << "Unable to load image file" << std::endl;
+    }
+
+    sf::Sprite platform;
+    platform.setTexture(platform_texture);
+    platform.scale(sf::Vector2f(25/platform.getLocalBounds().width, 25/platform.getLocalBounds().height));
 
     const float speed = 2.f;
     const int accel = 5;
@@ -561,7 +574,7 @@ int main()
             }
         }
 
-        on_the_floor = movePlayer(player, speed, on_the_floor);
+        movePlayer(player, speed);
 
         // Player Boundary
         sf::Vector2f player_position = player_boundary(player.getPosition());
