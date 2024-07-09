@@ -493,7 +493,7 @@ int main()
         player_position.y = gravity(player.getPosition(), accel);
         player.setPosition(player_position);
 
-        // Render
+        // Render Sprites
         drawAllRegions(window, player, walls, platforms);
 
         // Collision
