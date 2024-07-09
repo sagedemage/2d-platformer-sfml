@@ -194,7 +194,7 @@ int gravity(sf::Vector2f position, int accel) {
     return position.y;
 }
 
-bool allPlayerCollisions(sf::Sprite& player, sf::Sprite walls[45],
+bool playerSpriteCollisions(sf::Sprite& player, sf::Sprite walls[45],
     sf::Sprite platforms[12], bool on_the_floor, int accel, int speed) {
     on_the_floor = playerWallCollision(player, walls[0], on_the_floor, accel, speed);
     on_the_floor = playerWallCollision(player, walls[1], on_the_floor, accel, speed);
@@ -496,8 +496,8 @@ int main()
         // Render Sprites
         drawAllRegions(window, player, walls, platforms);
 
-        // Collision
-        on_the_floor = allPlayerCollisions(player, walls, platforms, on_the_floor, accel, speed);
+        // Sprite Collisions
+        on_the_floor = playerSpriteCollisions(player, walls, platforms, on_the_floor, accel, speed);
     }
 
     return 0;
