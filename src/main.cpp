@@ -361,7 +361,7 @@ int main()
     platform.setTexture(platform_texture);
     platform.scale(sf::Vector2f(25/platform.getLocalBounds().width, 25/platform.getLocalBounds().height));
 
-    // Scene Layout and PLayer Postion
+    // Scene Layout and Player Postion
     sf::Sprite walls[45] = {
         wall, wall, wall, wall, wall, wall, wall, wall, wall, wall,
         wall, wall, wall, wall, wall, wall, wall, wall, wall, wall,
