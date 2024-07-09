@@ -259,7 +259,7 @@ bool playerSpriteCollisions(sf::Sprite& player, sf::Sprite walls[45],
 
 }
 
-void drawAllRegions(sf::RenderWindow& window, sf::Sprite& player, sf::Sprite walls[45],
+void drawAllSprites(sf::RenderWindow& window, sf::Sprite& player, sf::Sprite walls[45],
     sf::Sprite platforms[12]) {
 
     window.clear(sf::Color(84, 193, 255, 255));
@@ -494,7 +494,7 @@ int main()
         player.setPosition(player_position);
 
         // Render Sprites
-        drawAllRegions(window, player, walls, platforms);
+        drawAllSprites(window, player, walls, platforms);
 
         // Sprite Collisions
         on_the_floor = playerSpriteCollisions(player, walls, platforms, on_the_floor, accel, speed);
