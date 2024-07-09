@@ -1,6 +1,10 @@
 # minimal-2d-platformer
 
-## Install
+Simple 2D platformer written with SFML in C++
+
+![game_window](./screenshots/game_window.webp)
+
+## Installation
 ```
 sudo apt-get install libsfml-dev
 ```
