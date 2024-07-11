@@ -27,7 +27,7 @@ sf::Vector2f player_boundary(sf::Vector2f position) {
     return position;
 }
 
-void movePlayer(sf::Sprite& player, int speed) {
+void movePlayer(sf::Sprite& player, float speed) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
         // move player left
@@ -41,20 +41,20 @@ void movePlayer(sf::Sprite& player, int speed) {
     }
 }
 
-bool playerWallCollision(sf::Sprite& player, sf::Sprite& wall, bool on_the_floor, int accel, int speed) {
+bool playerWallCollision(sf::Sprite& player, sf::Sprite& wall, bool on_the_floor, int accel, float speed) {
 
     sf::Vector2f p_position = player.getPosition();
     int offset = 2;
     /* X Axis Collision */
     if (player.getPosition().y > wall.getPosition().y+offset &&
         player.getPosition().y < wall.getPosition().y + 25-offset) {
-        if (player.getPosition().x+25 >= wall.getPosition().x &&
+        if (player.getPosition().x+25 > wall.getPosition().x &&
             player.getPosition().x+25 < wall.getPosition().x +25) {
             // left collision
             p_position.x-=speed;
             player.setPosition(p_position);
         }
-        else if (player.getPosition().x <= wall.getPosition().x+25 &&
+        else if (player.getPosition().x < wall.getPosition().x+25 &&
             player.getPosition().x > wall.getPosition().x) {
             // right collision
             p_position.x+=speed;
@@ -64,13 +64,13 @@ bool playerWallCollision(sf::Sprite& player, sf::Sprite& wall, bool on_the_floor
 
     else if (player.getPosition().y + 25 > wall.getPosition().y+offset &&
         player.getPosition().y + 25 < wall.getPosition().y + 25-offset) {
-        if (player.getPosition().x+25 >= wall.getPosition().x &&
+        if (player.getPosition().x+25 > wall.getPosition().x &&
             player.getPosition().x+25 < wall.getPosition().x +25) {
             // left collision
             p_position.x-=speed;
             player.setPosition(p_position);
         }
-        else if (player.getPosition().x <= wall.getPosition().x+25 &&
+        else if (player.getPosition().x < wall.getPosition().x+25 &&
             player.getPosition().x > wall.getPosition().x) {
             // right collision
             p_position.x+=speed;
@@ -80,13 +80,13 @@ bool playerWallCollision(sf::Sprite& player, sf::Sprite& wall, bool on_the_floor
 
     else if (player.getPosition().y + 25/2 > wall.getPosition().y &&
         player.getPosition().y + 25/2 < wall.getPosition().y + 25) {
-        if (player.getPosition().x+25 >= wall.getPosition().x &&
+        if (player.getPosition().x+25 > wall.getPosition().x &&
             player.getPosition().x+25 < wall.getPosition().x +25) {
             // left collision
             p_position.x-=speed;
             player.setPosition(p_position);
         }
-        else if (player.getPosition().x <= wall.getPosition().x+25 &&
+        else if (player.getPosition().x < wall.getPosition().x+25 &&
             player.getPosition().x > wall.getPosition().x) {
             // right collision
             p_position.x+=speed;
@@ -195,7 +195,7 @@ int gravity(sf::Vector2f position, int accel) {
 }
 
 bool playerSpriteCollisions(sf::Sprite& player, sf::Sprite walls[45],
-    sf::Sprite platforms[12], bool on_the_floor, int accel, int speed) {
+    sf::Sprite platforms[12], bool on_the_floor, int accel, float speed) {
     on_the_floor = playerWallCollision(player, walls[0], on_the_floor, accel, speed);
     on_the_floor = playerWallCollision(player, walls[1], on_the_floor, accel, speed);
     on_the_floor = playerWallCollision(player, walls[2], on_the_floor, accel, speed);
@@ -434,7 +434,7 @@ int main()
     platforms[10].setPosition(LEVEL_WIDTH-150, LEVEL_HEIGHT-75);
     platforms[11].setPosition(LEVEL_WIDTH-125, LEVEL_HEIGHT-75);
 
-    const int speed = 2.f;
+    const float speed = 1.25;
     const int accel = 5;
     bool on_the_floor = false;
 
