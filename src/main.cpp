@@ -3,6 +3,11 @@
 #define LEVEL_WIDTH 750
 #define LEVEL_HEIGHT 500
 
+struct CollisionState {
+    bool on_the_floor;
+    bool on_the_platform;
+};
+
 sf::Vector2f player_boundary(sf::Vector2f position) {
     if (position.x+25 >= 750.f)
     {
@@ -41,7 +46,7 @@ void movePlayer(sf::Sprite& player, float speed) {
     }
 }
 
-bool playerWallCollision(sf::Sprite& player, sf::Sprite& wall, bool on_the_floor, float accel, float speed) {
+CollisionState playerWallCollision(sf::Sprite& player, sf::Sprite& wall, CollisionState collisionState, float accel, float speed) {
 
     sf::Vector2f p_position = player.getPosition();
     int offset = 5;
@@ -102,7 +107,7 @@ bool playerWallCollision(sf::Sprite& player, sf::Sprite& wall, bool on_the_floor
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
-            on_the_floor = true;
+            collisionState.on_the_floor = true;
         }
         else if (player.getPosition().y < wall.getPosition().y+25 &&
             player.getPosition().y > wall.getPosition().y) {
@@ -119,7 +124,7 @@ bool playerWallCollision(sf::Sprite& player, sf::Sprite& wall, bool on_the_floor
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
-            on_the_floor = true;
+            collisionState.on_the_floor = true;
         }
         else if (player.getPosition().y < wall.getPosition().y+25 &&
             player.getPosition().y > wall.getPosition().y) {
@@ -136,7 +141,7 @@ bool playerWallCollision(sf::Sprite& player, sf::Sprite& wall, bool on_the_floor
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
-            on_the_floor = true;
+            collisionState.on_the_floor = true;
         }
         else if (player.getPosition().y < wall.getPosition().y+25 &&
             player.getPosition().y > wall.getPosition().y) {
@@ -145,10 +150,10 @@ bool playerWallCollision(sf::Sprite& player, sf::Sprite& wall, bool on_the_floor
             player.setPosition(p_position);
         }
     }
-    return on_the_floor;
+    return collisionState;
 }
 
-bool playerPlatformCollision(sf::Sprite& player, sf::Sprite& platform, bool on_the_floor, float accel) {
+CollisionState playerPlatformCollision(sf::Sprite& player, sf::Sprite& platform, CollisionState collisionState, float accel) {
 
     sf::Vector2f p_position = player.getPosition();
 
@@ -160,7 +165,8 @@ bool playerPlatformCollision(sf::Sprite& player, sf::Sprite& platform, bool on_t
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
-            on_the_floor = true;
+            collisionState.on_the_floor = true;
+            collisionState.on_the_platform = true;
         }
     }
 
@@ -171,7 +177,8 @@ bool playerPlatformCollision(sf::Sprite& player, sf::Sprite& platform, bool on_t
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
-            on_the_floor = true;
+            collisionState.on_the_floor = true;
+            collisionState.on_the_platform = true;
         }
     }
 
@@ -182,10 +189,11 @@ bool playerPlatformCollision(sf::Sprite& player, sf::Sprite& platform, bool on_t
             // top collision
             p_position.y-=accel;
             player.setPosition(p_position);
-            on_the_floor = true;
+            collisionState.on_the_floor = true;
+            collisionState.on_the_platform = true;
         }
     }
-    return on_the_floor;
+    return collisionState;
 }
 
 float gravity(sf::Vector2f position, float accel) {
@@ -194,68 +202,68 @@ float gravity(sf::Vector2f position, float accel) {
     return position.y;
 }
 
-bool playerSpriteCollisions(sf::Sprite& player, sf::Sprite walls[45],
-    sf::Sprite platforms[12], bool on_the_floor, float accel, float speed) {
-    on_the_floor = playerWallCollision(player, walls[0], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[1], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[2], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[3], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[4], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[5], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[6], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[7], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[8], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[9], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[10], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[11], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[12], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[13], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[14], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[15], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[16], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[17], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[18], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[19], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[20], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[21], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[22], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[23], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[24], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[25], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[26], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[27], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[28], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[29], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[30], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[31], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[32], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[33], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[34], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[35], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[36], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[37], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[38], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[39], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[40], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[41], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[42], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[43], on_the_floor, accel, speed);
-    on_the_floor = playerWallCollision(player, walls[44], on_the_floor, accel, speed);
+CollisionState playerSpriteCollisions(sf::Sprite& player, sf::Sprite walls[45],
+    sf::Sprite platforms[12], CollisionState collisionState, float accel, float speed) {
+    collisionState = playerWallCollision(player, walls[0], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[1], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[2], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[3], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[4], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[5], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[6], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[7], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[8], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[9], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[10], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[11], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[12], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[13], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[14], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[15], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[16], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[17], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[18], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[19], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[20], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[21], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[22], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[23], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[24], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[25], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[26], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[27], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[28], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[29], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[30], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[31], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[32], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[33], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[34], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[35], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[36], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[37], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[38], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[39], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[40], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[41], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[42], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[43], collisionState, accel, speed);
+    collisionState = playerWallCollision(player, walls[44], collisionState, accel, speed);
 
-    on_the_floor = playerPlatformCollision(player, platforms[0], on_the_floor, accel);
-    on_the_floor = playerPlatformCollision(player, platforms[1], on_the_floor, accel);
-    on_the_floor = playerPlatformCollision(player, platforms[2], on_the_floor, accel);
-    on_the_floor = playerPlatformCollision(player, platforms[3], on_the_floor, accel);
-    on_the_floor = playerPlatformCollision(player, platforms[4], on_the_floor, accel);
-    on_the_floor = playerPlatformCollision(player, platforms[5], on_the_floor, accel);
-    on_the_floor = playerPlatformCollision(player, platforms[6], on_the_floor, accel);
-    on_the_floor = playerPlatformCollision(player, platforms[7], on_the_floor, accel);
-    on_the_floor = playerPlatformCollision(player, platforms[8], on_the_floor, accel);
-    on_the_floor = playerPlatformCollision(player, platforms[9], on_the_floor, accel);
-    on_the_floor = playerPlatformCollision(player, platforms[10], on_the_floor, accel);
-    on_the_floor = playerPlatformCollision(player, platforms[11], on_the_floor, accel);
+    collisionState = playerPlatformCollision(player, platforms[0], collisionState, accel);
+    collisionState = playerPlatformCollision(player, platforms[1], collisionState, accel);
+    collisionState = playerPlatformCollision(player, platforms[2], collisionState, accel);
+    collisionState = playerPlatformCollision(player, platforms[3], collisionState, accel);
+    collisionState = playerPlatformCollision(player, platforms[4], collisionState, accel);
+    collisionState = playerPlatformCollision(player, platforms[5], collisionState, accel);
+    collisionState = playerPlatformCollision(player, platforms[6], collisionState, accel);
+    collisionState = playerPlatformCollision(player, platforms[7], collisionState, accel);
+    collisionState = playerPlatformCollision(player, platforms[8], collisionState, accel);
+    collisionState = playerPlatformCollision(player, platforms[9], collisionState, accel);
+    collisionState = playerPlatformCollision(player, platforms[10], collisionState, accel);
+    collisionState = playerPlatformCollision(player, platforms[11], collisionState, accel);
 
-    return on_the_floor;
+    return collisionState;
 
 }
 
@@ -436,7 +444,10 @@ int main()
 
     const float speed = 1.25;
     const float accel = 5;
-    bool on_the_floor = false;
+
+    CollisionState collisionState;
+    collisionState.on_the_floor = false;
+    collisionState.on_the_platform = false;
 
     sf::Music music;
     if (!music.openFromFile("assets/music/free_from_hell.ogg")) {
@@ -468,17 +479,20 @@ int main()
                 }
             }
             if (event.type == sf::Event::KeyReleased) {
-                if (event.key.code == sf::Keyboard::Up and on_the_floor == true)
+                if (event.key.code == sf::Keyboard::Up and collisionState.on_the_floor == true)
                 {
                     // jump
                     player.move(0.f, -accel*8);
-                    on_the_floor = false;
+                    collisionState.on_the_floor = false;
+                    collisionState.on_the_platform = false;
                 }
-                if (event.key.code == sf::Keyboard::Down and on_the_floor == true)
+                if (event.key.code == sf::Keyboard::Down and collisionState.on_the_floor == true
+                    and collisionState.on_the_platform == true)
                 {
                     // drop down
                     player.move(0.f, accel);
-                    on_the_floor = false;
+                    collisionState.on_the_floor = false;
+                    collisionState.on_the_platform = false;
                 }
             }
         }
@@ -497,7 +511,7 @@ int main()
         player.setPosition(player_position);
 
         // Sprite Collisions
-        on_the_floor = playerSpriteCollisions(player, walls, platforms, on_the_floor, accel, speed);
+        collisionState = playerSpriteCollisions(player, walls, platforms, collisionState, accel, speed);
     }
 
     return 0;
