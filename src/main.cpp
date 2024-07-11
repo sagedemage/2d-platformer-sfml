@@ -439,7 +439,7 @@ int main()
     bool on_the_floor = false;
 
     sf::Music music;
-    if (!music.openFromFile("assets/music/empty.ogg")) {
+    if (!music.openFromFile("assets/music/free_from_hell.ogg")) {
         return -1;
     }
 
