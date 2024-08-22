@@ -9,6 +9,11 @@ typedef struct CollisionState {
     bool on_the_platform;
 } CollisionState;
 
+typedef struct MotionState {
+    bool jump;
+    int jump_frames;
+} MotionState;
+
 typedef struct PlayerSpeed {
     float speed;
     float accel;
@@ -33,184 +38,184 @@ sf::Vector2f PlayerBoundary(sf::Vector2f position,
     return position;
 }
 
-void MovePlayer(sf::Sprite& player, float speed) {
+void MovePlayer(sf::Sprite *player, float speed) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
         // move player left
-        player.move(-speed, 0.F);
+        player->move(-speed, 0.F);
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
         // move player right
-        player.move(speed, 0.F);
+        player->move(speed, 0.F);
     }
 }
 
-void PlayerWallCollision(sf::Sprite& player, sf::Sprite& wall,
-                         CollisionState* collision_state,
+void PlayerWallCollision(sf::Sprite *player, sf::Sprite& wall,
+                         CollisionState *collision_state,
                          PlayerSpeed player_speed) {
-    sf::Vector2f p_position = player.getPosition();
+    sf::Vector2f p_position = player->getPosition();
     float offset = 5;
-    float player_width = player.getGlobalBounds().width;
-    float player_height = player.getGlobalBounds().height;
+    float player_width = player->getGlobalBounds().width;
+    float player_height = player->getGlobalBounds().height;
     /* X Axis Collision */
-    if (player.getPosition().y > wall.getPosition().y + offset &&
-        player.getPosition().y <
+    if (player->getPosition().y > wall.getPosition().y + offset &&
+        player->getPosition().y <
             wall.getPosition().y + player_height - offset) {
-        if (player.getPosition().x + player_width > wall.getPosition().x &&
-            player.getPosition().x + player_width <
+        if (player->getPosition().x + player_width > wall.getPosition().x &&
+            player->getPosition().x + player_width <
                 wall.getPosition().x + player_width) {
             // left collision
             p_position.x -= player_speed.speed;
-            player.setPosition(p_position);
-        } else if (player.getPosition().x <
+            player->setPosition(p_position);
+        } else if (player->getPosition().x <
                        wall.getPosition().x + player_width &&
-                   player.getPosition().x > wall.getPosition().x) {
+                   player->getPosition().x > wall.getPosition().x) {
             // right collision
             p_position.x += player_speed.speed;
-            player.setPosition(p_position);
+            player->setPosition(p_position);
         }
     }
 
-    else if (player.getPosition().y + player_height >
+    else if (player->getPosition().y + player_height >
                  wall.getPosition().y + offset &&
-             player.getPosition().y + player_height <
+             player->getPosition().y + player_height <
                  wall.getPosition().y + player_height - offset) {
-        if (player.getPosition().x + player_width > wall.getPosition().x &&
-            player.getPosition().x + player_width <
+        if (player->getPosition().x + player_width > wall.getPosition().x &&
+            player->getPosition().x + player_width <
                 wall.getPosition().x + player_width) {
             // left collision
             p_position.x -= player_speed.speed;
-            player.setPosition(p_position);
-        } else if (player.getPosition().x <
+            player->setPosition(p_position);
+        } else if (player->getPosition().x <
                        wall.getPosition().x + player_width &&
-                   player.getPosition().x > wall.getPosition().x) {
+                   player->getPosition().x > wall.getPosition().x) {
             // right collision
             p_position.x += player_speed.speed;
-            player.setPosition(p_position);
+            player->setPosition(p_position);
         }
     }
 
-    else if (player.getPosition().y + player_height / 2 >
+    else if (player->getPosition().y + player_height / 2 >
                  wall.getPosition().y &&
-             player.getPosition().y + player_height / 2 <
+             player->getPosition().y + player_height / 2 <
                  wall.getPosition().y + player_height) {
-        if (player.getPosition().x + player_width > wall.getPosition().x &&
-            player.getPosition().x + player_width <
+        if (player->getPosition().x + player_width > wall.getPosition().x &&
+            player->getPosition().x + player_width <
                 wall.getPosition().x + player_width) {
             // left collision
             p_position.x -= player_speed.speed;
-            player.setPosition(p_position);
-        } else if (player.getPosition().x <
+            player->setPosition(p_position);
+        } else if (player->getPosition().x <
                        wall.getPosition().x + player_width &&
-                   player.getPosition().x > wall.getPosition().x) {
+                   player->getPosition().x > wall.getPosition().x) {
             // right collision
             p_position.x += player_speed.speed;
-            player.setPosition(p_position);
+            player->setPosition(p_position);
         }
     }
 
     /* Y Axis Collision */
-    if (player.getPosition().x > wall.getPosition().x &&
-        player.getPosition().x < wall.getPosition().x + player_width) {
-        if (player.getPosition().y + player_height > wall.getPosition().y &&
-            player.getPosition().y + player_height <
+    if (player->getPosition().x > wall.getPosition().x &&
+        player->getPosition().x < wall.getPosition().x + player_width) {
+        if (player->getPosition().y + player_height > wall.getPosition().y &&
+            player->getPosition().y + player_height <
                 wall.getPosition().y + player_height) {
             // top collision
             p_position.y -= player_speed.accel;
-            player.setPosition(p_position);
+            player->setPosition(p_position);
             collision_state->on_the_floor = true;
-        } else if (player.getPosition().y <
+        } else if (player->getPosition().y <
                        wall.getPosition().y + player_height &&
-                   player.getPosition().y > wall.getPosition().y) {
+                   player->getPosition().y > wall.getPosition().y) {
             // bottom collision
             p_position.y += player_speed.accel;
-            player.setPosition(p_position);
+            player->setPosition(p_position);
         }
     }
 
-    else if (player.getPosition().x + player_width > wall.getPosition().x &&
-             player.getPosition().x + player_width <
+    else if (player->getPosition().x + player_width > wall.getPosition().x &&
+             player->getPosition().x + player_width <
                  wall.getPosition().x + player_width) {
-        if (player.getPosition().y + player_height > wall.getPosition().y &&
-            player.getPosition().y + player_height <
+        if (player->getPosition().y + player_height > wall.getPosition().y &&
+            player->getPosition().y + player_height <
                 wall.getPosition().y + player_height) {
             // top collision
             p_position.y -= player_speed.accel;
-            player.setPosition(p_position);
+            player->setPosition(p_position);
             collision_state->on_the_floor = true;
-        } else if (player.getPosition().y <
+        } else if (player->getPosition().y <
                        wall.getPosition().y + player_height &&
-                   player.getPosition().y > wall.getPosition().y) {
+                   player->getPosition().y > wall.getPosition().y) {
             // bottom collision
             p_position.y += player_speed.accel;
-            player.setPosition(p_position);
+            player->setPosition(p_position);
         }
     }
 
-    else if (player.getPosition().x + player_width / 2 > wall.getPosition().x &&
-             player.getPosition().x + player_width / 2 <
+    else if (player->getPosition().x + player_width / 2 > wall.getPosition().x &&
+             player->getPosition().x + player_width / 2 <
                  wall.getPosition().x + player_width) {
-        if (player.getPosition().y + player_height > wall.getPosition().y &&
-            player.getPosition().y + player_height <
+        if (player->getPosition().y + player_height > wall.getPosition().y &&
+            player->getPosition().y + player_height <
                 wall.getPosition().y + player_height) {
             // top collision
             p_position.y -= player_speed.accel;
-            player.setPosition(p_position);
+            player->setPosition(p_position);
             collision_state->on_the_floor = true;
-        } else if (player.getPosition().y <
+        } else if (player->getPosition().y <
                        wall.getPosition().y + player_height &&
-                   player.getPosition().y > wall.getPosition().y) {
+                   player->getPosition().y > wall.getPosition().y) {
             // bottom collision
             p_position.y += player_speed.accel;
-            player.setPosition(p_position);
+            player->setPosition(p_position);
         }
     }
 }
 
-void PlayerPlatformCollision(sf::Sprite& player, sf::Sprite& platform,
-                             CollisionState* collision_state, float accel) {
-    sf::Vector2f p_position = player.getPosition();
-    float player_width = player.getGlobalBounds().width;
-    float player_height = player.getGlobalBounds().height;
+void PlayerPlatformCollision(sf::Sprite *player, sf::Sprite &platform,
+                             CollisionState *collision_state, float accel) {
+    sf::Vector2f p_position = player->getPosition();
+    float player_width = player->getGlobalBounds().width;
+    float player_height = player->getGlobalBounds().height;
 
     /* Y Axis Collision */
-    if (player.getPosition().x > platform.getPosition().x &&
-        player.getPosition().x < platform.getPosition().x + player_width) {
-        if (player.getPosition().y + player_height > platform.getPosition().y &&
-            player.getPosition().y + player_height <
+    if (player->getPosition().x > platform.getPosition().x &&
+        player->getPosition().x < platform.getPosition().x + player_width) {
+        if (player->getPosition().y + player_height > platform.getPosition().y &&
+            player->getPosition().y + player_height <
                 platform.getPosition().y + 2 * accel) {
             // top collision
             p_position.y -= accel;
-            player.setPosition(p_position);
+            player->setPosition(p_position);
             collision_state->on_the_floor = true;
             collision_state->on_the_platform = true;
         }
     }
 
-    else if (player.getPosition().x + player_width > platform.getPosition().x &&
-             player.getPosition().x + player_width <
+    else if (player->getPosition().x + player_width > platform.getPosition().x &&
+             player->getPosition().x + player_width <
                  platform.getPosition().x + player_width) {
-        if (player.getPosition().y + player_height > platform.getPosition().y &&
-            player.getPosition().y + player_height <
+        if (player->getPosition().y + player_height > platform.getPosition().y &&
+            player->getPosition().y + player_height <
                 platform.getPosition().y + 2 * accel) {
             // top collision
             p_position.y -= accel;
-            player.setPosition(p_position);
+            player->setPosition(p_position);
             collision_state->on_the_floor = true;
             collision_state->on_the_platform = true;
         }
     }
 
-    else if (player.getPosition().x + player_width / 2 >
+    else if (player->getPosition().x + player_width / 2 >
                  platform.getPosition().x &&
-             player.getPosition().x + player_width / 2 <
+             player->getPosition().x + player_width / 2 <
                  platform.getPosition().x + player_width) {
-        if (player.getPosition().y + player_height > platform.getPosition().y &&
-            player.getPosition().y + player_height <
+        if (player->getPosition().y + player_height > platform.getPosition().y &&
+            player->getPosition().y + player_height <
                 platform.getPosition().y + 2 * accel) {
             // top collision
             p_position.y -= accel;
-            player.setPosition(p_position);
+            player->setPosition(p_position);
             collision_state->on_the_floor = true;
             collision_state->on_the_platform = true;
         }
@@ -223,7 +228,20 @@ float Gravity(sf::Vector2f position, float accel) {
     return position.y;
 }
 
-void PlayerSpriteCollisions(sf::Sprite& player,
+void JumpPhysics(sf::Sprite *player, MotionState *motion_state, PlayerSpeed player_speed) {
+    /* Jump physics */
+    if (motion_state->jump) {
+        player->move(0.F, -player_speed.accel * 2);
+        motion_state->jump_frames += 1;
+    }
+
+    if (motion_state->jump_frames == 8) {
+        motion_state->jump = false;
+        motion_state->jump_frames = 0;
+    }
+}
+
+void PlayerSpriteCollisions(sf::Sprite *player,
                             std::array<sf::Sprite, 45> walls,
                             std::array<sf::Sprite, 12> platforms,
                             CollisionState* collision_state,
@@ -300,7 +318,7 @@ void PlayerSpriteCollisions(sf::Sprite& player,
                             player_speed.accel);
 }
 
-void DrawAllSprites(sf::RenderWindow& window, sf::Sprite& player,
+void DrawAllSprites(sf::RenderWindow& window, sf::Sprite &player,
                     std::array<sf::Sprite, 45> walls,
                     std::array<sf::Sprite, 12> platforms) {
     window.clear(sf::Color(84, 193, 255, 255));
@@ -384,6 +402,10 @@ int main() {
                               25 / player.getLocalBounds().height));
 
     player.setPosition(0, LEVEL_HEIGHT - 250);
+
+    MotionState motion_state;
+    motion_state.jump = false;
+    motion_state.jump_frames = 0;
 
     sf::Texture wall_texture;
     if (!wall_texture.loadFromFile("./assets/tiles/tile1.png")) {
@@ -509,7 +531,7 @@ int main() {
                 if (event.key.code == sf::Keyboard::Up and
                     collision_state.on_the_floor) {
                     // jump
-                    player.move(0.F, -player_speed.accel * 8);
+                    motion_state.jump = true;
                     collision_state.on_the_floor = false;
                     collision_state.on_the_platform = false;
                 }
@@ -524,7 +546,7 @@ int main() {
             }
         }
 
-        MovePlayer(player, player_speed.speed);
+        MovePlayer(&player, player_speed.speed);
 
         // Player Boundary
         sf::Vector2f player_position =
@@ -538,8 +560,11 @@ int main() {
         player_position.y = Gravity(player.getPosition(), player_speed.accel);
         player.setPosition(player_position);
 
+        // Jump physics
+        JumpPhysics(&player, &motion_state, player_speed);
+
         // Sprite Collisions
-        PlayerSpriteCollisions(player, walls, platforms, &collision_state,
+        PlayerSpriteCollisions(&player, walls, platforms, &collision_state,
                                player_speed);
     }
 
