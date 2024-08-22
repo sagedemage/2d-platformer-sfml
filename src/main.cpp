@@ -1,323 +1,270 @@
+#include <array>
 #include <iostream>
 
-#define LEVEL_WIDTH 750
-#define LEVEL_HEIGHT 500
+constexpr unsigned LEVEL_WIDTH = 750;
+constexpr unsigned LEVEL_HEIGHT = 500;
 
-struct CollisionState {
+typedef struct CollisionState {
     bool on_the_floor;
     bool on_the_platform;
-};
+} CollisionState;
 
-sf::Vector2f player_boundary(sf::Vector2f position) {
-    if (position.x + 25 >= 750.f) {
+typedef struct PlayerSpeed {
+    float speed;
+    float accel;
+} PlayerSpeed;
+
+sf::Vector2f PlayerBoundary(sf::Vector2f position, sf::FloatRect global_bounds) {
+    if (position.x + global_bounds.width >= 750.F) {
         /* Right boundary */
-        position.x = float(LEVEL_WIDTH - 25);
-    } else if (position.x <= 0.f) {
+        position.x = static_cast<float>(LEVEL_WIDTH - global_bounds.width);
+    } else if (position.x <= 0.F) {
         /* Left  boundary */
-        position.x = 0.f;
+        position.x = 0.F;
     }
-    if (position.y <= 0.f) {
+    if (position.y <= 0.F) {
         /* Top boudnary */
-        position.y = 0.f;
-    } else if (position.y + 25 >= LEVEL_HEIGHT) {
+        position.y = 0.F;
+    } else if (position.y + global_bounds.height >= LEVEL_HEIGHT) {
         /* Bottom boudnary */
-        position.y = float(LEVEL_HEIGHT - 25);
+        position.y = static_cast<float>(LEVEL_HEIGHT - global_bounds.height);
     }
     return position;
 }
 
-void movePlayer(sf::Sprite& player, float speed) {
+void MovePlayer(sf::Sprite& player, float speed) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
         // move player left
-        player.move(-speed, 0.f);
+        player.move(-speed, 0.F);
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
         // move player right
-        player.move(speed, 0.f);
+        player.move(speed, 0.F);
     }
 }
 
-CollisionState playerWallCollision(sf::Sprite& player, sf::Sprite& wall,
-                                   CollisionState collisionState, float accel,
-                                   float speed) {
+void PlayerWallCollision(sf::Sprite& player, sf::Sprite& wall,
+                         CollisionState* collision_state, PlayerSpeed player_speed) {
     sf::Vector2f p_position = player.getPosition();
-    int offset = 5;
+    float offset = 5;
+    float player_width = player.getGlobalBounds().width;
+    float player_height = player.getGlobalBounds().height;
     /* X Axis Collision */
     if (player.getPosition().y > wall.getPosition().y + offset &&
-        player.getPosition().y < wall.getPosition().y + 25 - offset) {
-        if (player.getPosition().x + 25 > wall.getPosition().x &&
-            player.getPosition().x + 25 < wall.getPosition().x + 25) {
+        player.getPosition().y < wall.getPosition().y + player_height - offset) {
+        if (player.getPosition().x + player_width > wall.getPosition().x &&
+            player.getPosition().x + player_width < wall.getPosition().x + player_width) {
             // left collision
-            p_position.x -= speed;
+            p_position.x -= player_speed.speed;
             player.setPosition(p_position);
-        } else if (player.getPosition().x < wall.getPosition().x + 25 &&
+        } else if (player.getPosition().x < wall.getPosition().x + player_width &&
                    player.getPosition().x > wall.getPosition().x) {
             // right collision
-            p_position.x += speed;
+            p_position.x += player_speed.speed;
             player.setPosition(p_position);
         }
     }
 
-    else if (player.getPosition().y + 25 > wall.getPosition().y + offset &&
-             player.getPosition().y + 25 < wall.getPosition().y + 25 - offset) {
-        if (player.getPosition().x + 25 > wall.getPosition().x &&
-            player.getPosition().x + 25 < wall.getPosition().x + 25) {
+    else if (player.getPosition().y + player_height > wall.getPosition().y + offset &&
+             player.getPosition().y + player_height < wall.getPosition().y + player_height - offset) {
+        if (player.getPosition().x + player_width > wall.getPosition().x &&
+            player.getPosition().x + player_width < wall.getPosition().x + player_width) {
             // left collision
-            p_position.x -= speed;
+            p_position.x -= player_speed.speed;
             player.setPosition(p_position);
-        } else if (player.getPosition().x < wall.getPosition().x + 25 &&
+        } else if (player.getPosition().x < wall.getPosition().x + player_width &&
                    player.getPosition().x > wall.getPosition().x) {
             // right collision
-            p_position.x += speed;
+            p_position.x += player_speed.speed;
             player.setPosition(p_position);
         }
     }
 
-    else if (player.getPosition().y + 25 / 2 > wall.getPosition().y &&
-             player.getPosition().y + 25 / 2 < wall.getPosition().y + 25) {
-        if (player.getPosition().x + 25 > wall.getPosition().x &&
-            player.getPosition().x + 25 < wall.getPosition().x + 25) {
+    else if (player.getPosition().y + player_height / 2 > wall.getPosition().y &&
+             player.getPosition().y + player_height / 2 < wall.getPosition().y + player_height) {
+        if (player.getPosition().x + player_width > wall.getPosition().x &&
+            player.getPosition().x + player_width < wall.getPosition().x + player_width) {
             // left collision
-            p_position.x -= speed;
+            p_position.x -= player_speed.speed;
             player.setPosition(p_position);
-        } else if (player.getPosition().x < wall.getPosition().x + 25 &&
+        } else if (player.getPosition().x < wall.getPosition().x + player_width &&
                    player.getPosition().x > wall.getPosition().x) {
             // right collision
-            p_position.x += speed;
+            p_position.x += player_speed.speed;
             player.setPosition(p_position);
         }
     }
 
     /* Y Axis Collision */
     if (player.getPosition().x > wall.getPosition().x &&
-        player.getPosition().x < wall.getPosition().x + 25) {
-        if (player.getPosition().y + 25 > wall.getPosition().y &&
-            player.getPosition().y + 25 < wall.getPosition().y + 25) {
+        player.getPosition().x < wall.getPosition().x + player_width) {
+        if (player.getPosition().y + player_height > wall.getPosition().y &&
+            player.getPosition().y + player_height < wall.getPosition().y + player_height) {
             // top collision
-            p_position.y -= accel;
+            p_position.y -= player_speed.accel;
             player.setPosition(p_position);
-            collisionState.on_the_floor = true;
-        } else if (player.getPosition().y < wall.getPosition().y + 25 &&
+            collision_state->on_the_floor = true;
+        } else if (player.getPosition().y < wall.getPosition().y + player_height &&
                    player.getPosition().y > wall.getPosition().y) {
             // bottom collision
-            p_position.y += accel;
+            p_position.y += player_speed.accel;
             player.setPosition(p_position);
         }
     }
 
-    else if (player.getPosition().x + 25 > wall.getPosition().x &&
-             player.getPosition().x + 25 < wall.getPosition().x + 25) {
-        if (player.getPosition().y + 25 > wall.getPosition().y &&
-            player.getPosition().y + 25 < wall.getPosition().y + 25) {
+    else if (player.getPosition().x + player_width > wall.getPosition().x &&
+             player.getPosition().x + player_width < wall.getPosition().x + player_width) {
+        if (player.getPosition().y + player_height > wall.getPosition().y &&
+            player.getPosition().y + player_height < wall.getPosition().y + player_height) {
             // top collision
-            p_position.y -= accel;
+            p_position.y -= player_speed.accel;
             player.setPosition(p_position);
-            collisionState.on_the_floor = true;
-        } else if (player.getPosition().y < wall.getPosition().y + 25 &&
+            collision_state->on_the_floor = true;
+        } else if (player.getPosition().y < wall.getPosition().y + player_height &&
                    player.getPosition().y > wall.getPosition().y) {
             // bottom collision
-            p_position.y += accel;
+            p_position.y += player_speed.accel;
             player.setPosition(p_position);
         }
     }
 
-    else if (player.getPosition().x + 25 / 2 > wall.getPosition().x &&
-             player.getPosition().x + 25 / 2 < wall.getPosition().x + 25) {
-        if (player.getPosition().y + 25 > wall.getPosition().y &&
-            player.getPosition().y + 25 < wall.getPosition().y + 25) {
+    else if (player.getPosition().x + player_width / 2 > wall.getPosition().x &&
+             player.getPosition().x + player_width / 2 < wall.getPosition().x + player_width) {
+        if (player.getPosition().y + player_height > wall.getPosition().y &&
+            player.getPosition().y + player_height < wall.getPosition().y + player_height) {
             // top collision
-            p_position.y -= accel;
+            p_position.y -= player_speed.accel;
             player.setPosition(p_position);
-            collisionState.on_the_floor = true;
-        } else if (player.getPosition().y < wall.getPosition().y + 25 &&
+            collision_state->on_the_floor = true;
+        } else if (player.getPosition().y < wall.getPosition().y + player_height &&
                    player.getPosition().y > wall.getPosition().y) {
             // bottom collision
-            p_position.y += accel;
+            p_position.y += player_speed.accel;
             player.setPosition(p_position);
         }
     }
-    return collisionState;
 }
 
-CollisionState playerPlatformCollision(sf::Sprite& player, sf::Sprite& platform,
-                                       CollisionState collisionState,
-                                       float accel) {
+void PlayerPlatformCollision(sf::Sprite& player, sf::Sprite& platform,
+                             CollisionState* collision_state, float accel) {
     sf::Vector2f p_position = player.getPosition();
+    float player_width = player.getGlobalBounds().width;
+    float player_height = player.getGlobalBounds().height;
 
     /* Y Axis Collision */
     if (player.getPosition().x > platform.getPosition().x &&
-        player.getPosition().x < platform.getPosition().x + 25) {
-        if (player.getPosition().y + 25 > platform.getPosition().y &&
-            player.getPosition().y + 25 <
+        player.getPosition().x < platform.getPosition().x + player_width) {
+        if (player.getPosition().y + player_height > platform.getPosition().y &&
+            player.getPosition().y + player_height <
                 platform.getPosition().y + 2 * accel) {
             // top collision
             p_position.y -= accel;
             player.setPosition(p_position);
-            collisionState.on_the_floor = true;
-            collisionState.on_the_platform = true;
+            collision_state->on_the_floor = true;
+            collision_state->on_the_platform = true;
         }
     }
 
-    else if (player.getPosition().x + 25 > platform.getPosition().x &&
-             player.getPosition().x + 25 < platform.getPosition().x + 25) {
-        if (player.getPosition().y + 25 > platform.getPosition().y &&
-            player.getPosition().y + 25 <
+    else if (player.getPosition().x + player_width > platform.getPosition().x &&
+             player.getPosition().x + player_width < platform.getPosition().x + player_width) {
+        if (player.getPosition().y + player_height > platform.getPosition().y &&
+            player.getPosition().y + player_height <
                 platform.getPosition().y + 2 * accel) {
             // top collision
             p_position.y -= accel;
             player.setPosition(p_position);
-            collisionState.on_the_floor = true;
-            collisionState.on_the_platform = true;
+            collision_state->on_the_floor = true;
+            collision_state->on_the_platform = true;
         }
     }
 
-    else if (player.getPosition().x + 25 / 2 > platform.getPosition().x &&
-             player.getPosition().x + 25 / 2 < platform.getPosition().x + 25) {
-        if (player.getPosition().y + 25 > platform.getPosition().y &&
-            player.getPosition().y + 25 <
+    else if (player.getPosition().x + player_width / 2 > platform.getPosition().x &&
+             player.getPosition().x + player_width / 2 < platform.getPosition().x + player_width) {
+        if (player.getPosition().y + player_height > platform.getPosition().y &&
+            player.getPosition().y + player_height <
                 platform.getPosition().y + 2 * accel) {
             // top collision
             p_position.y -= accel;
             player.setPosition(p_position);
-            collisionState.on_the_floor = true;
-            collisionState.on_the_platform = true;
+            collision_state->on_the_floor = true;
+            collision_state->on_the_platform = true;
         }
     }
-    return collisionState;
 }
 
-float gravity(sf::Vector2f position, float accel) {
+float Gravity(sf::Vector2f position, float accel) {
     position.y += accel;
 
     return position.y;
 }
 
-CollisionState playerSpriteCollisions(sf::Sprite& player, sf::Sprite walls[45],
-                                      sf::Sprite platforms[12],
-                                      CollisionState collisionState,
-                                      float accel, float speed) {
-    collisionState =
-        playerWallCollision(player, walls[0], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[1], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[2], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[3], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[4], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[5], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[6], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[7], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[8], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[9], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[10], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[11], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[12], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[13], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[14], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[15], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[16], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[17], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[18], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[19], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[20], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[21], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[22], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[23], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[24], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[25], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[26], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[27], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[28], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[29], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[30], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[31], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[32], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[33], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[34], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[35], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[36], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[37], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[38], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[39], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[40], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[41], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[42], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[43], collisionState, accel, speed);
-    collisionState =
-        playerWallCollision(player, walls[44], collisionState, accel, speed);
+void PlayerSpriteCollisions(sf::Sprite& player, std::array<sf::Sprite, 45> walls,
+                                      std::array<sf::Sprite, 12> platforms,
+                                      CollisionState* collision_state,
+                                      PlayerSpeed player_speed) {
+    PlayerWallCollision(player, walls[0], collision_state, player_speed);
+    PlayerWallCollision(player, walls[1], collision_state, player_speed);
+    PlayerWallCollision(player, walls[2], collision_state, player_speed);
+    PlayerWallCollision(player, walls[3], collision_state, player_speed);
+    PlayerWallCollision(player, walls[4], collision_state, player_speed);
+    PlayerWallCollision(player, walls[5], collision_state, player_speed);
+    PlayerWallCollision(player, walls[6], collision_state, player_speed);
+    PlayerWallCollision(player, walls[7], collision_state, player_speed);
+    PlayerWallCollision(player, walls[8], collision_state, player_speed);
+    PlayerWallCollision(player, walls[9], collision_state, player_speed);
+    PlayerWallCollision(player, walls[10], collision_state, player_speed);
+    PlayerWallCollision(player, walls[11], collision_state, player_speed);
+    PlayerWallCollision(player, walls[12], collision_state, player_speed);
+    PlayerWallCollision(player, walls[13], collision_state, player_speed);
+    PlayerWallCollision(player, walls[14], collision_state, player_speed);
+    PlayerWallCollision(player, walls[15], collision_state, player_speed);
+    PlayerWallCollision(player, walls[16], collision_state, player_speed);
+    PlayerWallCollision(player, walls[17], collision_state, player_speed);
+    PlayerWallCollision(player, walls[18], collision_state, player_speed);
+    PlayerWallCollision(player, walls[19], collision_state, player_speed);
+    PlayerWallCollision(player, walls[20], collision_state, player_speed);
+    PlayerWallCollision(player, walls[21], collision_state, player_speed);
+    PlayerWallCollision(player, walls[22], collision_state, player_speed);
+    PlayerWallCollision(player, walls[23], collision_state, player_speed);
+    PlayerWallCollision(player, walls[24], collision_state, player_speed);
+    PlayerWallCollision(player, walls[25], collision_state, player_speed);
+    PlayerWallCollision(player, walls[26], collision_state, player_speed);
+    PlayerWallCollision(player, walls[27], collision_state, player_speed);
+    PlayerWallCollision(player, walls[28], collision_state, player_speed);
+    PlayerWallCollision(player, walls[29], collision_state, player_speed);
+    PlayerWallCollision(player, walls[30], collision_state, player_speed);
+    PlayerWallCollision(player, walls[31], collision_state, player_speed);
+    PlayerWallCollision(player, walls[32], collision_state, player_speed);
+    PlayerWallCollision(player, walls[33], collision_state, player_speed);
+    PlayerWallCollision(player, walls[34], collision_state, player_speed);
+    PlayerWallCollision(player, walls[35], collision_state, player_speed);
+    PlayerWallCollision(player, walls[36], collision_state, player_speed);
+    PlayerWallCollision(player, walls[37], collision_state, player_speed);
+    PlayerWallCollision(player, walls[38], collision_state, player_speed);
+    PlayerWallCollision(player, walls[39], collision_state, player_speed);
+    PlayerWallCollision(player, walls[40], collision_state, player_speed);
+    PlayerWallCollision(player, walls[41], collision_state, player_speed);
+    PlayerWallCollision(player, walls[42], collision_state, player_speed);
+    PlayerWallCollision(player, walls[43], collision_state, player_speed);
+    PlayerWallCollision(player, walls[44], collision_state, player_speed);
 
-    collisionState =
-        playerPlatformCollision(player, platforms[0], collisionState, accel);
-    collisionState =
-        playerPlatformCollision(player, platforms[1], collisionState, accel);
-    collisionState =
-        playerPlatformCollision(player, platforms[2], collisionState, accel);
-    collisionState =
-        playerPlatformCollision(player, platforms[3], collisionState, accel);
-    collisionState =
-        playerPlatformCollision(player, platforms[4], collisionState, accel);
-    collisionState =
-        playerPlatformCollision(player, platforms[5], collisionState, accel);
-    collisionState =
-        playerPlatformCollision(player, platforms[6], collisionState, accel);
-    collisionState =
-        playerPlatformCollision(player, platforms[7], collisionState, accel);
-    collisionState =
-        playerPlatformCollision(player, platforms[8], collisionState, accel);
-    collisionState =
-        playerPlatformCollision(player, platforms[9], collisionState, accel);
-    collisionState =
-        playerPlatformCollision(player, platforms[10], collisionState, accel);
-    collisionState =
-        playerPlatformCollision(player, platforms[11], collisionState, accel);
-
-    return collisionState;
+    PlayerPlatformCollision(player, platforms[0], collision_state, player_speed.accel);
+    PlayerPlatformCollision(player, platforms[1], collision_state, player_speed.accel);
+    PlayerPlatformCollision(player, platforms[2], collision_state, player_speed.accel);
+    PlayerPlatformCollision(player, platforms[3], collision_state, player_speed.accel);
+    PlayerPlatformCollision(player, platforms[4], collision_state, player_speed.accel);
+    PlayerPlatformCollision(player, platforms[5], collision_state, player_speed.accel);
+    PlayerPlatformCollision(player, platforms[6], collision_state, player_speed.accel);
+    PlayerPlatformCollision(player, platforms[7], collision_state, player_speed.accel);
+    PlayerPlatformCollision(player, platforms[8], collision_state, player_speed.accel);
+    PlayerPlatformCollision(player, platforms[9], collision_state, player_speed.accel);
+    PlayerPlatformCollision(player, platforms[10], collision_state, player_speed.accel);
+    PlayerPlatformCollision(player, platforms[11], collision_state, player_speed.accel);
 }
 
-void drawAllSprites(sf::RenderWindow& window, sf::Sprite& player,
-                    sf::Sprite walls[45], sf::Sprite platforms[12]) {
+void DrawAllSprites(sf::RenderWindow& window, sf::Sprite& player,
+                    std::array<sf::Sprite, 45> walls, std::array<sf::Sprite, 12> platforms) {
     window.clear(sf::Color(84, 193, 255, 255));
 
     window.draw(walls[0]);
@@ -421,13 +368,13 @@ int main() {
                                 25 / platform.getLocalBounds().height));
 
     // Scene Layout
-    sf::Sprite walls[45] = {
+    std::array<sf::Sprite, 45> walls = {
         wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall,
         wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall,
         wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall,
         wall, wall, wall, wall, wall, wall, wall, wall, wall};
 
-    sf::Sprite platforms[12] = {platform, platform, platform, platform,
+    std::array<sf::Sprite, 12> platforms = {platform, platform, platform, platform,
                                 platform, platform, platform, platform,
                                 platform, platform, platform, platform};
 
@@ -490,12 +437,13 @@ int main() {
     platforms[10].setPosition(LEVEL_WIDTH - 150, LEVEL_HEIGHT - 75);
     platforms[11].setPosition(LEVEL_WIDTH - 125, LEVEL_HEIGHT - 75);
 
-    const float speed = 1.25;
-    const float accel = 5;
+    PlayerSpeed player_speed{};
+    player_speed.speed = 1.25;
+    player_speed.accel = 5;
 
-    CollisionState collisionState;
-    collisionState.on_the_floor = false;
-    collisionState.on_the_platform = false;
+    CollisionState collision_state{};
+    collision_state.on_the_floor = false;
+    collision_state.on_the_platform = false;
 
     sf::Music music;
     if (!music.openFromFile("assets/music/free_from_hell.ogg")) {
@@ -509,7 +457,7 @@ int main() {
     music.play();
 
     while (window.isOpen()) {
-        sf::Event event;
+        sf::Event event{};
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
@@ -521,39 +469,38 @@ int main() {
             }
             if (event.type == sf::Event::KeyReleased) {
                 if (event.key.code == sf::Keyboard::Up and
-                    collisionState.on_the_floor == true) {
+                    collision_state.on_the_floor) {
                     // jump
-                    player.move(0.f, -accel * 8);
-                    collisionState.on_the_floor = false;
-                    collisionState.on_the_platform = false;
+                    player.move(0.F, -player_speed.accel * 8);
+                    collision_state.on_the_floor = false;
+                    collision_state.on_the_platform = false;
                 }
                 if (event.key.code == sf::Keyboard::Down and
-                    collisionState.on_the_floor == true and
-                    collisionState.on_the_platform == true) {
+                    collision_state.on_the_floor and
+                    collision_state.on_the_platform) {
                     // drop down
-                    player.move(0.f, accel);
-                    collisionState.on_the_floor = false;
-                    collisionState.on_the_platform = false;
+                    player.move(0.F, player_speed.accel);
+                    collision_state.on_the_floor = false;
+                    collision_state.on_the_platform = false;
                 }
             }
         }
 
-        movePlayer(player, speed);
+        MovePlayer(player, player_speed.speed);
 
         // Player Boundary
-        sf::Vector2f player_position = player_boundary(player.getPosition());
+        sf::Vector2f player_position = PlayerBoundary(player.getPosition(), player.getGlobalBounds());
         player.setPosition(player_position);
 
         // Render Sprites
-        drawAllSprites(window, player, walls, platforms);
+        DrawAllSprites(window, player, walls, platforms);
 
         // Gravity
-        player_position.y = gravity(player.getPosition(), accel);
+        player_position.y = Gravity(player.getPosition(), player_speed.accel);
         player.setPosition(player_position);
 
         // Sprite Collisions
-        collisionState = playerSpriteCollisions(player, walls, platforms,
-                                                collisionState, accel, speed);
+        PlayerSpriteCollisions(player, walls, platforms, &collision_state, player_speed);
     }
 
     return 0;
