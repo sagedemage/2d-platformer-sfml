@@ -33,7 +33,7 @@ void HoldKeybindings(sf::Sprite *player, float speed) {
         player->move(-speed, 0.F);
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         // move player right
         player->move(speed, 0.F);
     }
@@ -51,7 +51,7 @@ void ClickKeybindings(sf::Event event, sf::Sprite *player,
             collision_state->on_the_floor = false;
             collision_state->on_the_platform = false;
         }
-        if (event.key.code == sf::Keyboard::S and
+        else if (event.key.code == sf::Keyboard::S and
             collision_state->on_the_floor and
             collision_state->on_the_platform) {
             // drop down
