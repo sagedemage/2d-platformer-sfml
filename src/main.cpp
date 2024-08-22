@@ -38,7 +38,7 @@ sf::Vector2f PlayerBoundary(sf::Vector2f position,
     return position;
 }
 
-void MovePlayer(sf::Sprite *player, float speed) {
+void HoldKeybindings(sf::Sprite *player, float speed) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
         // move player left
         player->move(-speed, 0.F);
@@ -552,7 +552,7 @@ int main() {
             }
         }
 
-        MovePlayer(&player, player_speed.speed);
+        HoldKeybindings(&player, player_speed.speed);
 
         // Player Boundary
         sf::Vector2f player_position =
