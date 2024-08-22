@@ -39,6 +39,29 @@ void HoldKeybindings(sf::Sprite *player, float speed) {
     }
 }
 
+void ClickKeybindings(sf::Event event, sf::Sprite *player,
+                      MotionState *motion_state,
+                      CollisionState *collision_state,
+                      PlayerSpeed player_speed) {
+    if (event.type == sf::Event::KeyReleased) {
+        if (event.key.code == sf::Keyboard::K and
+            collision_state->on_the_floor) {
+            // jump
+            motion_state->jump = true;
+            collision_state->on_the_floor = false;
+            collision_state->on_the_platform = false;
+        }
+        if (event.key.code == sf::Keyboard::S and
+            collision_state->on_the_floor and
+            collision_state->on_the_platform) {
+            // drop down
+            player->move(0.F, player_speed.accel);
+            collision_state->on_the_floor = false;
+            collision_state->on_the_platform = false;
+        }
+    }
+}
+
 void PlayerWallCollision(sf::Sprite *player, sf::Sprite &wall,
                          CollisionState *collision_state,
                          PlayerSpeed player_speed) {
@@ -517,28 +540,14 @@ int main() {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Escape) {
                     window.close();
                 }
             }
-            if (event.type == sf::Event::KeyReleased) {
-                if (event.key.code == sf::Keyboard::K and
-                    collision_state.on_the_floor) {
-                    // jump
-                    motion_state.jump = true;
-                    collision_state.on_the_floor = false;
-                    collision_state.on_the_platform = false;
-                }
-                if (event.key.code == sf::Keyboard::S and
-                    collision_state.on_the_floor and
-                    collision_state.on_the_platform) {
-                    // drop down
-                    player.move(0.F, player_speed.accel);
-                    collision_state.on_the_floor = false;
-                    collision_state.on_the_platform = false;
-                }
-            }
+
+            ClickKeybindings(event, &player, &motion_state, &collision_state, player_speed);
         }
 
         HoldKeybindings(&player, player_speed.speed);
