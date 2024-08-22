@@ -50,7 +50,7 @@ void MovePlayer(sf::Sprite *player, float speed) {
     }
 }
 
-void PlayerWallCollision(sf::Sprite *player, sf::Sprite& wall,
+void PlayerWallCollision(sf::Sprite *player, sf::Sprite &wall,
                          CollisionState *collision_state,
                          PlayerSpeed player_speed) {
     sf::Vector2f p_position = player->getPosition();
@@ -152,7 +152,8 @@ void PlayerWallCollision(sf::Sprite *player, sf::Sprite& wall,
         }
     }
 
-    else if (player->getPosition().x + player_width / 2 > wall.getPosition().x &&
+    else if (player->getPosition().x + player_width / 2 >
+                 wall.getPosition().x &&
              player->getPosition().x + player_width / 2 <
                  wall.getPosition().x + player_width) {
         if (player->getPosition().y + player_height > wall.getPosition().y &&
@@ -181,7 +182,8 @@ void PlayerPlatformCollision(sf::Sprite *player, sf::Sprite &platform,
     /* Y Axis Collision */
     if (player->getPosition().x > platform.getPosition().x &&
         player->getPosition().x < platform.getPosition().x + player_width) {
-        if (player->getPosition().y + player_height > platform.getPosition().y &&
+        if (player->getPosition().y + player_height >
+                platform.getPosition().y &&
             player->getPosition().y + player_height <
                 platform.getPosition().y + 2 * accel) {
             // top collision
@@ -192,10 +194,12 @@ void PlayerPlatformCollision(sf::Sprite *player, sf::Sprite &platform,
         }
     }
 
-    else if (player->getPosition().x + player_width > platform.getPosition().x &&
+    else if (player->getPosition().x + player_width >
+                 platform.getPosition().x &&
              player->getPosition().x + player_width <
                  platform.getPosition().x + player_width) {
-        if (player->getPosition().y + player_height > platform.getPosition().y &&
+        if (player->getPosition().y + player_height >
+                platform.getPosition().y &&
             player->getPosition().y + player_height <
                 platform.getPosition().y + 2 * accel) {
             // top collision
@@ -210,7 +214,8 @@ void PlayerPlatformCollision(sf::Sprite *player, sf::Sprite &platform,
                  platform.getPosition().x &&
              player->getPosition().x + player_width / 2 <
                  platform.getPosition().x + player_width) {
-        if (player->getPosition().y + player_height > platform.getPosition().y &&
+        if (player->getPosition().y + player_height >
+                platform.getPosition().y &&
             player->getPosition().y + player_height <
                 platform.getPosition().y + 2 * accel) {
             // top collision
@@ -228,7 +233,8 @@ float Gravity(sf::Vector2f position, float accel) {
     return position.y;
 }
 
-void JumpPhysics(sf::Sprite *player, MotionState *motion_state, PlayerSpeed player_speed) {
+void JumpPhysics(sf::Sprite *player, MotionState *motion_state,
+                 PlayerSpeed player_speed) {
     /* Jump physics */
     if (motion_state->jump) {
         player->move(0.F, -player_speed.accel * 2);
@@ -244,7 +250,7 @@ void JumpPhysics(sf::Sprite *player, MotionState *motion_state, PlayerSpeed play
 void PlayerSpriteCollisions(sf::Sprite *player,
                             std::array<sf::Sprite, 45> walls,
                             std::array<sf::Sprite, 12> platforms,
-                            CollisionState* collision_state,
+                            CollisionState *collision_state,
                             PlayerSpeed player_speed) {
     PlayerWallCollision(player, walls[0], collision_state, player_speed);
     PlayerWallCollision(player, walls[1], collision_state, player_speed);
@@ -318,7 +324,7 @@ void PlayerSpriteCollisions(sf::Sprite *player,
                             player_speed.accel);
 }
 
-void DrawAllSprites(sf::RenderWindow& window, sf::Sprite &player,
+void DrawAllSprites(sf::RenderWindow &window, sf::Sprite &player,
                     std::array<sf::Sprite, 45> walls,
                     std::array<sf::Sprite, 12> platforms) {
     window.clear(sf::Color(84, 193, 255, 255));
