@@ -19,6 +19,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${STANDARD_C_VERSION_FLAG} ${OPTIMIZE_FLAG
 
 add_executable(2dPlatformer ${SOURCE_FILES})
 
+target_include_directories(${PROJECT_NAME} PUBLIC include)
+
 find_package(SFML 2.5 COMPONENTS window graphics system audio REQUIRED)
 
 target_link_libraries(2dPlatformer -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio)
