@@ -557,9 +557,9 @@ int main() {
     collision_state.on_the_platform = false;
 
     unsigned int joystick_num = 0;
-    if (!sf::Joystick::isConnected(joystick_num)) {
-        std::cerr << "Joystick number " + std::to_string(joystick_num) +
-                         " not connected!"
+    if (sf::Joystick::isConnected(joystick_num)) {
+        std::cout << "Joystick number " + std::to_string(joystick_num) +
+                         " is connected!"
                   << std::endl;
     }
 
