@@ -27,15 +27,15 @@ sf::Vector2f PlayerBoundary(sf::Vector2f position,
     return position;
 }
 
-void HoldKeybindings(sf::Sprite *player, float speed,
+void HoldKeybindings(sf::Sprite *player, PlayerSpeed player_speed,
                      unsigned int joystick_num) {
     /* Keyboard */
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
         // move player left
-        player->move(-speed, 0.F);
+        player->move(-player_speed.speed, 0.F);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         // move player right
-        player->move(speed, 0.F);
+        player->move(player_speed.speed, 0.F);
     }
 
     /* Controller */
@@ -43,12 +43,12 @@ void HoldKeybindings(sf::Sprite *player, float speed,
         -100) {
         // move player left
         // Left D-pad: sf::Joystick::PovX equal to -100
-        player->move(-speed, 0.F);
+        player->move(-player_speed.speed, 0.F);
     } else if (sf::Joystick::getAxisPosition(joystick_num,
                                              sf::Joystick::PovX) == 100) {
         // move player right
         // Right D-pad: sf::Joystick::PovX equal to 100
-        player->move(speed, 0.F);
+        player->move(player_speed.speed, 0.F);
     }
 }
 
@@ -591,7 +591,7 @@ int main() {
                              player_speed, joystick_num);
         }
 
-        HoldKeybindings(&player, player_speed.speed, joystick_num);
+        HoldKeybindings(&player, player_speed, joystick_num);
 
         // Player Boundary
         sf::Vector2f player_position =
