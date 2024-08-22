@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22 VERSION 0.1.0)
 
 project(2dPlatformer)
 
-set(HEADER_FILES src/pch/sfml-pch.hpp)
+set(HEADER_FILES src/pch/minimal-2d-platformer-pch.hpp)
 
 set(SOURCE_FILES 
     src/main.cpp 
@@ -16,6 +16,7 @@ set(OPTIMIZE_FLAG "-O3")
 set(WARNING_FLAGS "-Werror -Wpedantic -Wall -Wextra -Wno-unknown-pragmas")
 
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY lint_codebase.sh DESTINATION ${CMAKE_BINARY_DIR})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${STANDARD_C_VERSION_FLAG} ${OPTIMIZE_FLAG} ${WARNING_FLAGS}")
 
