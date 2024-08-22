@@ -1,23 +1,12 @@
+/* Standard libraries */
 #include <array>
 #include <iostream>
 
+/* Global header files */
+#include "engine/entities.hpp"
+
 constexpr unsigned LEVEL_WIDTH = 750;
 constexpr unsigned LEVEL_HEIGHT = 500;
-
-typedef struct CollisionState {
-    bool on_the_floor;
-    bool on_the_platform;
-} CollisionState;
-
-typedef struct MotionState {
-    bool jump;
-    int jump_frames;
-} MotionState;
-
-typedef struct PlayerSpeed {
-    float speed;
-    float accel;
-} PlayerSpeed;
 
 sf::Vector2f PlayerBoundary(sf::Vector2f position,
                             sf::FloatRect global_bounds) {

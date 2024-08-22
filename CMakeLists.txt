@@ -4,10 +4,7 @@ project(2dPlatformer)
 
 set(HEADER_FILES src/pch/minimal-2d-platformer-pch.hpp)
 
-set(SOURCE_FILES 
-    src/main.cpp 
-    ${HEADER_FILES}
-    )
+file(GLOB_RECURSE SOURCE_FILES "src/*.cpp" "src/*.hpp")
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -21,6 +18,8 @@ file(COPY lint_codebase.sh DESTINATION ${CMAKE_BINARY_DIR})
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${STANDARD_C_VERSION_FLAG} ${OPTIMIZE_FLAG} ${WARNING_FLAGS}")
 
 add_executable(2dPlatformer ${SOURCE_FILES})
+
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 find_package(SFML 2.5 COMPONENTS window graphics system audio REQUIRED)
 
