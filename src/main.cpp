@@ -13,168 +13,18 @@
 constexpr unsigned LEVEL_WIDTH = 750;
 constexpr unsigned LEVEL_HEIGHT = 500;
 
-sf::Vector2f PlayerBoundary(sf::Vector2f position,
-                            sf::FloatRect global_bounds) {
-    if (position.x + global_bounds.width >= 750.F) {
-        /* Right boundary */
-        position.x = static_cast<float>(LEVEL_WIDTH - global_bounds.width);
-    } else if (position.x <= 0.F) {
-        /* Left  boundary */
-        position.x = 0.F;
-    }
-    if (position.y <= 0.F) {
-        /* Top boudnary */
-        position.y = 0.F;
-    } else if (position.y + global_bounds.height >= LEVEL_HEIGHT) {
-        /* Bottom boudnary */
-        position.y = static_cast<float>(LEVEL_HEIGHT - global_bounds.height);
-    }
-    return position;
-}
+/* Function Declarations */
+sf::Vector2f PlayerBoundary(sf::Vector2f position, sf::FloatRect global_bounds);
 
 void PlayerSpriteCollisions(sf::Sprite *player,
                             std::array<sf::Sprite, 45> walls,
                             std::array<sf::Sprite, 12> platforms,
                             CollisionState *collision_state,
-                            PlayerSpeed player_speed) {
-    PlayerWallCollision(player, walls[0], collision_state, player_speed);
-    PlayerWallCollision(player, walls[1], collision_state, player_speed);
-    PlayerWallCollision(player, walls[2], collision_state, player_speed);
-    PlayerWallCollision(player, walls[3], collision_state, player_speed);
-    PlayerWallCollision(player, walls[4], collision_state, player_speed);
-    PlayerWallCollision(player, walls[5], collision_state, player_speed);
-    PlayerWallCollision(player, walls[6], collision_state, player_speed);
-    PlayerWallCollision(player, walls[7], collision_state, player_speed);
-    PlayerWallCollision(player, walls[8], collision_state, player_speed);
-    PlayerWallCollision(player, walls[9], collision_state, player_speed);
-    PlayerWallCollision(player, walls[10], collision_state, player_speed);
-    PlayerWallCollision(player, walls[11], collision_state, player_speed);
-    PlayerWallCollision(player, walls[12], collision_state, player_speed);
-    PlayerWallCollision(player, walls[13], collision_state, player_speed);
-    PlayerWallCollision(player, walls[14], collision_state, player_speed);
-    PlayerWallCollision(player, walls[15], collision_state, player_speed);
-    PlayerWallCollision(player, walls[16], collision_state, player_speed);
-    PlayerWallCollision(player, walls[17], collision_state, player_speed);
-    PlayerWallCollision(player, walls[18], collision_state, player_speed);
-    PlayerWallCollision(player, walls[19], collision_state, player_speed);
-    PlayerWallCollision(player, walls[20], collision_state, player_speed);
-    PlayerWallCollision(player, walls[21], collision_state, player_speed);
-    PlayerWallCollision(player, walls[22], collision_state, player_speed);
-    PlayerWallCollision(player, walls[23], collision_state, player_speed);
-    PlayerWallCollision(player, walls[24], collision_state, player_speed);
-    PlayerWallCollision(player, walls[25], collision_state, player_speed);
-    PlayerWallCollision(player, walls[26], collision_state, player_speed);
-    PlayerWallCollision(player, walls[27], collision_state, player_speed);
-    PlayerWallCollision(player, walls[28], collision_state, player_speed);
-    PlayerWallCollision(player, walls[29], collision_state, player_speed);
-    PlayerWallCollision(player, walls[30], collision_state, player_speed);
-    PlayerWallCollision(player, walls[31], collision_state, player_speed);
-    PlayerWallCollision(player, walls[32], collision_state, player_speed);
-    PlayerWallCollision(player, walls[33], collision_state, player_speed);
-    PlayerWallCollision(player, walls[34], collision_state, player_speed);
-    PlayerWallCollision(player, walls[35], collision_state, player_speed);
-    PlayerWallCollision(player, walls[36], collision_state, player_speed);
-    PlayerWallCollision(player, walls[37], collision_state, player_speed);
-    PlayerWallCollision(player, walls[38], collision_state, player_speed);
-    PlayerWallCollision(player, walls[39], collision_state, player_speed);
-    PlayerWallCollision(player, walls[40], collision_state, player_speed);
-    PlayerWallCollision(player, walls[41], collision_state, player_speed);
-    PlayerWallCollision(player, walls[42], collision_state, player_speed);
-    PlayerWallCollision(player, walls[43], collision_state, player_speed);
-    PlayerWallCollision(player, walls[44], collision_state, player_speed);
-
-    PlayerPlatformCollision(player, platforms[0], collision_state,
-                            player_speed.accel);
-    PlayerPlatformCollision(player, platforms[1], collision_state,
-                            player_speed.accel);
-    PlayerPlatformCollision(player, platforms[2], collision_state,
-                            player_speed.accel);
-    PlayerPlatformCollision(player, platforms[3], collision_state,
-                            player_speed.accel);
-    PlayerPlatformCollision(player, platforms[4], collision_state,
-                            player_speed.accel);
-    PlayerPlatformCollision(player, platforms[5], collision_state,
-                            player_speed.accel);
-    PlayerPlatformCollision(player, platforms[6], collision_state,
-                            player_speed.accel);
-    PlayerPlatformCollision(player, platforms[7], collision_state,
-                            player_speed.accel);
-    PlayerPlatformCollision(player, platforms[8], collision_state,
-                            player_speed.accel);
-    PlayerPlatformCollision(player, platforms[9], collision_state,
-                            player_speed.accel);
-    PlayerPlatformCollision(player, platforms[10], collision_state,
-                            player_speed.accel);
-    PlayerPlatformCollision(player, platforms[11], collision_state,
-                            player_speed.accel);
-}
+                            PlayerSpeed player_speed);
 
 void DrawAllSprites(sf::RenderWindow &window, sf::Sprite &player,
                     std::array<sf::Sprite, 45> walls,
-                    std::array<sf::Sprite, 12> platforms) {
-    window.clear(sf::Color(84, 193, 255, 255));
-
-    window.draw(walls[0]);
-    window.draw(walls[1]);
-    window.draw(walls[2]);
-    window.draw(walls[3]);
-    window.draw(walls[4]);
-    window.draw(walls[5]);
-    window.draw(walls[6]);
-    window.draw(walls[7]);
-    window.draw(walls[8]);
-    window.draw(walls[9]);
-    window.draw(walls[10]);
-    window.draw(walls[11]);
-    window.draw(walls[12]);
-    window.draw(walls[13]);
-    window.draw(walls[14]);
-    window.draw(walls[15]);
-    window.draw(walls[16]);
-    window.draw(walls[17]);
-    window.draw(walls[18]);
-    window.draw(walls[19]);
-    window.draw(walls[20]);
-    window.draw(walls[21]);
-    window.draw(walls[22]);
-    window.draw(walls[23]);
-    window.draw(walls[24]);
-    window.draw(walls[25]);
-    window.draw(walls[26]);
-    window.draw(walls[27]);
-    window.draw(walls[28]);
-    window.draw(walls[29]);
-    window.draw(walls[30]);
-    window.draw(walls[31]);
-    window.draw(walls[32]);
-    window.draw(walls[33]);
-    window.draw(walls[34]);
-    window.draw(walls[35]);
-    window.draw(walls[36]);
-    window.draw(walls[37]);
-    window.draw(walls[38]);
-    window.draw(walls[39]);
-    window.draw(walls[40]);
-    window.draw(walls[41]);
-    window.draw(walls[42]);
-    window.draw(walls[43]);
-    window.draw(walls[44]);
-    window.draw(platforms[0]);
-    window.draw(platforms[1]);
-    window.draw(platforms[2]);
-    window.draw(platforms[3]);
-    window.draw(platforms[4]);
-    window.draw(platforms[5]);
-    window.draw(platforms[6]);
-    window.draw(platforms[7]);
-    window.draw(platforms[8]);
-    window.draw(platforms[9]);
-    window.draw(platforms[10]);
-    window.draw(platforms[11]);
-    window.draw(player);
-
-    window.display();
-}
+                    std::array<sf::Sprite, 12> platforms);
 
 int main() {
     // window
@@ -354,4 +204,167 @@ int main() {
     }
 
     return 0;
+}
+
+sf::Vector2f PlayerBoundary(sf::Vector2f position,
+                            sf::FloatRect global_bounds) {
+    if (position.x + global_bounds.width >= 750.F) {
+        /* Right boundary */
+        position.x = static_cast<float>(LEVEL_WIDTH - global_bounds.width);
+    } else if (position.x <= 0.F) {
+        /* Left  boundary */
+        position.x = 0.F;
+    }
+    if (position.y <= 0.F) {
+        /* Top boudnary */
+        position.y = 0.F;
+    } else if (position.y + global_bounds.height >= LEVEL_HEIGHT) {
+        /* Bottom boudnary */
+        position.y = static_cast<float>(LEVEL_HEIGHT - global_bounds.height);
+    }
+    return position;
+}
+
+void PlayerSpriteCollisions(sf::Sprite *player,
+                            std::array<sf::Sprite, 45> walls,
+                            std::array<sf::Sprite, 12> platforms,
+                            CollisionState *collision_state,
+                            PlayerSpeed player_speed) {
+    PlayerWallCollision(player, walls[0], collision_state, player_speed);
+    PlayerWallCollision(player, walls[1], collision_state, player_speed);
+    PlayerWallCollision(player, walls[2], collision_state, player_speed);
+    PlayerWallCollision(player, walls[3], collision_state, player_speed);
+    PlayerWallCollision(player, walls[4], collision_state, player_speed);
+    PlayerWallCollision(player, walls[5], collision_state, player_speed);
+    PlayerWallCollision(player, walls[6], collision_state, player_speed);
+    PlayerWallCollision(player, walls[7], collision_state, player_speed);
+    PlayerWallCollision(player, walls[8], collision_state, player_speed);
+    PlayerWallCollision(player, walls[9], collision_state, player_speed);
+    PlayerWallCollision(player, walls[10], collision_state, player_speed);
+    PlayerWallCollision(player, walls[11], collision_state, player_speed);
+    PlayerWallCollision(player, walls[12], collision_state, player_speed);
+    PlayerWallCollision(player, walls[13], collision_state, player_speed);
+    PlayerWallCollision(player, walls[14], collision_state, player_speed);
+    PlayerWallCollision(player, walls[15], collision_state, player_speed);
+    PlayerWallCollision(player, walls[16], collision_state, player_speed);
+    PlayerWallCollision(player, walls[17], collision_state, player_speed);
+    PlayerWallCollision(player, walls[18], collision_state, player_speed);
+    PlayerWallCollision(player, walls[19], collision_state, player_speed);
+    PlayerWallCollision(player, walls[20], collision_state, player_speed);
+    PlayerWallCollision(player, walls[21], collision_state, player_speed);
+    PlayerWallCollision(player, walls[22], collision_state, player_speed);
+    PlayerWallCollision(player, walls[23], collision_state, player_speed);
+    PlayerWallCollision(player, walls[24], collision_state, player_speed);
+    PlayerWallCollision(player, walls[25], collision_state, player_speed);
+    PlayerWallCollision(player, walls[26], collision_state, player_speed);
+    PlayerWallCollision(player, walls[27], collision_state, player_speed);
+    PlayerWallCollision(player, walls[28], collision_state, player_speed);
+    PlayerWallCollision(player, walls[29], collision_state, player_speed);
+    PlayerWallCollision(player, walls[30], collision_state, player_speed);
+    PlayerWallCollision(player, walls[31], collision_state, player_speed);
+    PlayerWallCollision(player, walls[32], collision_state, player_speed);
+    PlayerWallCollision(player, walls[33], collision_state, player_speed);
+    PlayerWallCollision(player, walls[34], collision_state, player_speed);
+    PlayerWallCollision(player, walls[35], collision_state, player_speed);
+    PlayerWallCollision(player, walls[36], collision_state, player_speed);
+    PlayerWallCollision(player, walls[37], collision_state, player_speed);
+    PlayerWallCollision(player, walls[38], collision_state, player_speed);
+    PlayerWallCollision(player, walls[39], collision_state, player_speed);
+    PlayerWallCollision(player, walls[40], collision_state, player_speed);
+    PlayerWallCollision(player, walls[41], collision_state, player_speed);
+    PlayerWallCollision(player, walls[42], collision_state, player_speed);
+    PlayerWallCollision(player, walls[43], collision_state, player_speed);
+    PlayerWallCollision(player, walls[44], collision_state, player_speed);
+
+    PlayerPlatformCollision(player, platforms[0], collision_state,
+                            player_speed.accel);
+    PlayerPlatformCollision(player, platforms[1], collision_state,
+                            player_speed.accel);
+    PlayerPlatformCollision(player, platforms[2], collision_state,
+                            player_speed.accel);
+    PlayerPlatformCollision(player, platforms[3], collision_state,
+                            player_speed.accel);
+    PlayerPlatformCollision(player, platforms[4], collision_state,
+                            player_speed.accel);
+    PlayerPlatformCollision(player, platforms[5], collision_state,
+                            player_speed.accel);
+    PlayerPlatformCollision(player, platforms[6], collision_state,
+                            player_speed.accel);
+    PlayerPlatformCollision(player, platforms[7], collision_state,
+                            player_speed.accel);
+    PlayerPlatformCollision(player, platforms[8], collision_state,
+                            player_speed.accel);
+    PlayerPlatformCollision(player, platforms[9], collision_state,
+                            player_speed.accel);
+    PlayerPlatformCollision(player, platforms[10], collision_state,
+                            player_speed.accel);
+    PlayerPlatformCollision(player, platforms[11], collision_state,
+                            player_speed.accel);
+}
+
+void DrawAllSprites(sf::RenderWindow &window, sf::Sprite &player,
+                    std::array<sf::Sprite, 45> walls,
+                    std::array<sf::Sprite, 12> platforms) {
+    window.clear(sf::Color(84, 193, 255, 255));
+
+    window.draw(walls[0]);
+    window.draw(walls[1]);
+    window.draw(walls[2]);
+    window.draw(walls[3]);
+    window.draw(walls[4]);
+    window.draw(walls[5]);
+    window.draw(walls[6]);
+    window.draw(walls[7]);
+    window.draw(walls[8]);
+    window.draw(walls[9]);
+    window.draw(walls[10]);
+    window.draw(walls[11]);
+    window.draw(walls[12]);
+    window.draw(walls[13]);
+    window.draw(walls[14]);
+    window.draw(walls[15]);
+    window.draw(walls[16]);
+    window.draw(walls[17]);
+    window.draw(walls[18]);
+    window.draw(walls[19]);
+    window.draw(walls[20]);
+    window.draw(walls[21]);
+    window.draw(walls[22]);
+    window.draw(walls[23]);
+    window.draw(walls[24]);
+    window.draw(walls[25]);
+    window.draw(walls[26]);
+    window.draw(walls[27]);
+    window.draw(walls[28]);
+    window.draw(walls[29]);
+    window.draw(walls[30]);
+    window.draw(walls[31]);
+    window.draw(walls[32]);
+    window.draw(walls[33]);
+    window.draw(walls[34]);
+    window.draw(walls[35]);
+    window.draw(walls[36]);
+    window.draw(walls[37]);
+    window.draw(walls[38]);
+    window.draw(walls[39]);
+    window.draw(walls[40]);
+    window.draw(walls[41]);
+    window.draw(walls[42]);
+    window.draw(walls[43]);
+    window.draw(walls[44]);
+    window.draw(platforms[0]);
+    window.draw(platforms[1]);
+    window.draw(platforms[2]);
+    window.draw(platforms[3]);
+    window.draw(platforms[4]);
+    window.draw(platforms[5]);
+    window.draw(platforms[6]);
+    window.draw(platforms[7]);
+    window.draw(platforms[8]);
+    window.draw(platforms[9]);
+    window.draw(platforms[10]);
+    window.draw(platforms[11]);
+    window.draw(player);
+
+    window.display();
 }
