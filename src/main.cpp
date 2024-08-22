@@ -27,22 +27,36 @@ sf::Vector2f PlayerBoundary(sf::Vector2f position,
     return position;
 }
 
-void HoldKeybindings(sf::Sprite *player, float speed) {
+void HoldKeybindings(sf::Sprite *player, float speed,
+                     unsigned int joystick_num) {
+    /* Keyboard */
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
         // move player left
         player->move(-speed, 0.F);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        // move player right
+        player->move(speed, 0.F);
     }
 
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+    /* Controller */
+    if (sf::Joystick::getAxisPosition(joystick_num, sf::Joystick::PovX) ==
+        -100) {
+        // move player left
+        // Left D-pad: sf::Joystick::PovX equal to -100
+        player->move(-speed, 0.F);
+    } else if (sf::Joystick::getAxisPosition(joystick_num,
+                                             sf::Joystick::PovX) == 100) {
         // move player right
+        // Right D-pad: sf::Joystick::PovX equal to 100
         player->move(speed, 0.F);
     }
 }
 
 void ClickKeybindings(sf::Event event, sf::Sprite *player,
                       MotionState *motion_state,
-                      CollisionState *collision_state,
-                      PlayerSpeed player_speed) {
+                      CollisionState *collision_state, PlayerSpeed player_speed,
+                      unsigned int joystick_num) {
+    /* Keyboard */
     if (event.type == sf::Event::KeyReleased) {
         if (event.key.code == sf::Keyboard::K and
             collision_state->on_the_floor) {
@@ -50,15 +64,34 @@ void ClickKeybindings(sf::Event event, sf::Sprite *player,
             motion_state->jump = true;
             collision_state->on_the_floor = false;
             collision_state->on_the_platform = false;
-        }
-        else if (event.key.code == sf::Keyboard::S and
-            collision_state->on_the_floor and
-            collision_state->on_the_platform) {
+        } else if (event.key.code == sf::Keyboard::S and
+                   collision_state->on_the_floor and
+                   collision_state->on_the_platform) {
             // drop down
             player->move(0.F, player_speed.accel);
             collision_state->on_the_floor = false;
             collision_state->on_the_platform = false;
         }
+    }
+
+    /* Controller */
+    if (sf::Joystick::isButtonPressed(joystick_num, 0) and
+        collision_state->on_the_floor) {
+        // jump
+        // Button 0: A Button on the Xbox One Controller
+        motion_state->jump = true;
+        collision_state->on_the_floor = false;
+        collision_state->on_the_platform = false;
+    }
+
+    if (sf::Joystick::getAxisPosition(joystick_num, sf::Joystick::PovY) ==
+            100 and
+        collision_state->on_the_floor and collision_state->on_the_platform) {
+        // drop down
+        // Down D-pad: sf::Joystick::PovY equal to 100
+        player->move(0.F, player_speed.accel);
+        collision_state->on_the_floor = false;
+        collision_state->on_the_platform = false;
     }
 }
 
@@ -523,6 +556,13 @@ int main() {
     collision_state.on_the_floor = false;
     collision_state.on_the_platform = false;
 
+    unsigned int joystick_num = 0;
+    if (!sf::Joystick::isConnected(joystick_num)) {
+        std::cerr << "Joystick number " + std::to_string(joystick_num) +
+                         " not connected!"
+                  << std::endl;
+    }
+
     sf::Music music;
     if (!music.openFromFile("assets/music/free_from_hell.ogg")) {
         return -1;
@@ -547,10 +587,11 @@ int main() {
                 }
             }
 
-            ClickKeybindings(event, &player, &motion_state, &collision_state, player_speed);
+            ClickKeybindings(event, &player, &motion_state, &collision_state,
+                             player_speed, joystick_num);
         }
 
-        HoldKeybindings(&player, player_speed.speed);
+        HoldKeybindings(&player, player_speed.speed, joystick_num);
 
         // Player Boundary
         sf::Vector2f player_position =
