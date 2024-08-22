@@ -28,12 +28,12 @@ sf::Vector2f PlayerBoundary(sf::Vector2f position,
 }
 
 void HoldKeybindings(sf::Sprite *player, float speed) {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
         // move player left
         player->move(-speed, 0.F);
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         // move player right
         player->move(speed, 0.F);
     }
@@ -523,14 +523,14 @@ int main() {
                 }
             }
             if (event.type == sf::Event::KeyReleased) {
-                if (event.key.code == sf::Keyboard::Up and
+                if (event.key.code == sf::Keyboard::K and
                     collision_state.on_the_floor) {
                     // jump
                     motion_state.jump = true;
                     collision_state.on_the_floor = false;
                     collision_state.on_the_platform = false;
                 }
-                if (event.key.code == sf::Keyboard::Down and
+                if (event.key.code == sf::Keyboard::S and
                     collision_state.on_the_floor and
                     collision_state.on_the_platform) {
                     // drop down
