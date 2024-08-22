@@ -7,6 +7,7 @@
 
 /* Local header files */
 #include "engine/collision.hpp"
+#include "engine/physics.hpp"
 #include "keybindings/keybindings.hpp"
 
 constexpr unsigned LEVEL_WIDTH = 750;
@@ -29,26 +30,6 @@ sf::Vector2f PlayerBoundary(sf::Vector2f position,
         position.y = static_cast<float>(LEVEL_HEIGHT - global_bounds.height);
     }
     return position;
-}
-
-float Gravity(sf::Vector2f position, float accel) {
-    position.y += accel;
-
-    return position.y;
-}
-
-void JumpPhysics(sf::Sprite *player, MotionState *motion_state,
-                 PlayerSpeed player_speed) {
-    /* Jump physics */
-    if (motion_state->jump) {
-        player->move(0.F, -player_speed.accel * 2);
-        motion_state->jump_frames += 1;
-    }
-
-    if (motion_state->jump_frames == 8) {
-        motion_state->jump = false;
-        motion_state->jump_frames = 0;
-    }
 }
 
 void PlayerSpriteCollisions(sf::Sprite *player,
