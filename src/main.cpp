@@ -192,8 +192,7 @@ int main() {
         DrawAllSprites(window, player, walls, platforms);
 
         // Gravity
-        player_position.y = Gravity(player.getPosition(), player_speed.accel);
-        player.setPosition(player_position);
+        Gravity(&player, player_speed.accel);
 
         // Jump physics
         JumpPhysics(&player, &motion_state, player_speed);

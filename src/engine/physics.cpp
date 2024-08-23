@@ -1,9 +1,8 @@
 #include "physics.hpp"
 
-float Gravity(sf::Vector2f position, float accel) {
-    position.y += accel;
-
-    return position.y;
+void Gravity(sf::Sprite *player, float accel) {
+    /* Gravity of player */
+    player->move(0, accel);
 }
 
 void JumpPhysics(sf::Sprite *player, MotionState *motion_state,
