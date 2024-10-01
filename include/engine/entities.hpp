@@ -11,9 +11,16 @@ typedef struct MotionState {
     int jump_frames;
 } MotionState;
 
-typedef struct PlayerSpeed {
+typedef struct MotionSpeed {
     float speed;
     float accel;
-} PlayerSpeed;
+} MotionSpeed;
+
+typedef struct Player {
+    CollisionState collision_state{};
+    MotionState motion_state{};
+    MotionSpeed motion_speed{};
+    sf::Sprite sprite;
+} Player;
 
 #endif  // ENTITIES_HPP

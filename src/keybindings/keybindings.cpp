@@ -1,14 +1,14 @@
 #include "keybindings.hpp"
 
-void HoldKeybindings(sf::Sprite *player, PlayerSpeed player_speed,
+void HoldKeybindings(sf::Sprite *player_sprite, MotionSpeed motion_speed,
                      unsigned int joystick_num) {
     /* Keyboard */
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
         // move player left
-        player->move(-player_speed.speed, 0.F);
+        player_sprite->move(-motion_speed.speed, 0.F);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         // move player right
-        player->move(player_speed.speed, 0.F);
+        player_sprite->move(motion_speed.speed, 0.F);
     }
 
     /* Controller */
@@ -16,18 +16,18 @@ void HoldKeybindings(sf::Sprite *player, PlayerSpeed player_speed,
         -100) {
         // move player left
         // Left D-pad: sf::Joystick::PovX equal to -100
-        player->move(-player_speed.speed, 0.F);
+        player_sprite->move(-motion_speed.speed, 0.F);
     } else if (sf::Joystick::getAxisPosition(joystick_num,
                                              sf::Joystick::PovX) == 100) {
         // move player right
         // Right D-pad: sf::Joystick::PovX equal to 100
-        player->move(player_speed.speed, 0.F);
+        player_sprite->move(motion_speed.speed, 0.F);
     }
 }
 
 void ClickKeybindings(sf::Event event, sf::Sprite *player,
                       MotionState *motion_state,
-                      CollisionState *collision_state, PlayerSpeed player_speed,
+                      CollisionState *collision_state, MotionSpeed motion_speed,
                       unsigned int joystick_num) {
     /* Keyboard */
     if (event.type == sf::Event::KeyReleased) {
@@ -41,7 +41,7 @@ void ClickKeybindings(sf::Event event, sf::Sprite *player,
                    collision_state->on_the_floor and
                    collision_state->on_the_platform) {
             // drop down
-            player->move(0.F, player_speed.accel);
+            player->move(0.F, motion_speed.accel);
             collision_state->on_the_floor = false;
             collision_state->on_the_platform = false;
         }
@@ -62,7 +62,7 @@ void ClickKeybindings(sf::Event event, sf::Sprite *player,
         collision_state->on_the_floor and collision_state->on_the_platform) {
         // drop down
         // Down D-pad: sf::Joystick::PovY equal to 100
-        player->move(0.F, player_speed.accel);
+        player->move(0.F, motion_speed.accel);
         collision_state->on_the_floor = false;
         collision_state->on_the_platform = false;
     }

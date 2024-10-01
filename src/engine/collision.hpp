@@ -1,8 +1,8 @@
 #include "engine/entities.hpp"
 
-void PlayerWallCollision(sf::Sprite *player, sf::Sprite &wall,
+void PlayerWallCollision(sf::Sprite *player_sprite, sf::Sprite &wall,
                          CollisionState *collision_state,
-                         PlayerSpeed player_speed);
+                         MotionSpeed motion_speed);
 
-void PlayerPlatformCollision(sf::Sprite *player, sf::Sprite &platform,
+void PlayerPlatformCollision(sf::Sprite *player_sprite, sf::Sprite &platform,
                              CollisionState *collision_state, float accel);
