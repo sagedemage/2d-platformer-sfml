@@ -6,10 +6,10 @@ void Gravity(sf::Sprite *player, float accel) {
 }
 
 void JumpPhysics(sf::Sprite *player, MotionState *motion_state,
-                 PlayerSpeed player_speed) {
+                 MotionSpeed motion_speed) {
     /* Jump physics */
     if (motion_state->jump) {
-        player->move(0.F, -player_speed.accel * 2);
+        player->move(0.F, -motion_speed.accel * 3);
         motion_state->jump_frames += 1;
     }
 
