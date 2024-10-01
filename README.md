@@ -1,4 +1,4 @@
-# minimal-2d-platformer
+# 2d-platformer-sfml
 
 Simple 2D platformer written with SFML in C++
 
