@@ -142,11 +142,11 @@ int main() {
     motion_state.jump = false;
     motion_state.jump_frames = 0;
 
-    MotionSpeed motion_speed{};
+    MotionSpeed motion_speed;
     motion_speed.speed = player_speed;
     motion_speed.accel = player_accel;
 
-    CollisionState collision_state{};
+    CollisionState collision_state;
     collision_state.on_the_floor = false;
     collision_state.on_the_platform = false;
 
