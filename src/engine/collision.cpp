@@ -6,6 +6,7 @@ void PlayerBlockCollision(sf::Sprite *player_sprite, sf::Sprite &block_sprite,
     float offset = 5;
     float player_width = player_sprite->getGlobalBounds().width;
     float player_height = player_sprite->getGlobalBounds().height;
+
     /* X Axis Collision */
     if (player_sprite->getPosition().y >
             block_sprite.getPosition().y + offset &&
@@ -80,7 +81,7 @@ void PlayerBlockCollision(sf::Sprite *player_sprite, sf::Sprite &block_sprite,
                    player_sprite->getPosition().y >
                        block_sprite.getPosition().y) {
             // bottom collision
-            player_sprite->move(0, motion_speed.accel);
+            player_sprite->move(0, motion_speed.accel * 2);
         }
     }
 
@@ -100,7 +101,7 @@ void PlayerBlockCollision(sf::Sprite *player_sprite, sf::Sprite &block_sprite,
                    player_sprite->getPosition().y >
                        block_sprite.getPosition().y) {
             // bottom collision
-            player_sprite->move(0, motion_speed.accel);
+            player_sprite->move(0, motion_speed.accel * 2);
         }
     }
 
@@ -120,7 +121,7 @@ void PlayerBlockCollision(sf::Sprite *player_sprite, sf::Sprite &block_sprite,
                    player_sprite->getPosition().y >
                        block_sprite.getPosition().y) {
             // bottom collision
-            player_sprite->move(0, motion_speed.accel);
+            player_sprite->move(0, motion_speed.accel * 2);
         }
     }
 }
